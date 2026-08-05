@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Wiki | Do Quang Hao</title>
+    <title>Quantum Computing Textbook | Do Quang Hao</title>
+    <meta name="description" content="A connected, book-length quantum computing wiki covering mathematics, quantum mechanics, algorithms, Qiskit, error correction, QML, and research practice.">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,9 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     
     <!-- KaTeX for Math Rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/contrib/auto-render.min.js"></script>
 
     <!-- Custom CSS -->
     <link rel="icon" href="../assets/avatar.png" type="image/png">
@@ -43,21 +44,32 @@
       </div>
     </nav>
 
-    <!-- Main Wiki Layout -->
+    <header class="book-masthead">
+      <div class="container book-masthead-inner">
+        <div>
+          <span>Quantum Wiki · Book Edition</span>
+          <strong>From mathematical foundations to research practice</strong>
+        </div>
+        <a href="papers.html">Paper analysis library <span aria-hidden="true">→</span></a>
+      </div>
+    </header>
+
+    <!-- Main Textbook Layout -->
     <div class="wiki-layout container">
         
         <!-- Mobile Sidebar Toggle -->
         <button class="mobile-sidebar-toggle" id="wikiSidebarToggle" aria-label="Toggle Wiki Menu">
-            📖 Topics Menu
+            Contents &amp; search
         </button>
 
         <!-- Left Sidebar: Navigation & Search -->
         <aside class="wiki-sidebar" id="wikiSidebar">
             <div class="wiki-search-box">
-                <input type="search" id="wikiSearch" placeholder="Search topics..." aria-label="Search Wiki">
+                <label for="wikiSearch">Search the full book</label>
+                <input type="search" id="wikiSearch" placeholder="Try “phase”, “noise”, “HHL”..." aria-label="Search the full textbook">
             </div>
             
-            <nav class="wiki-nav" aria-label="Wiki Categories">
+            <nav class="wiki-nav" aria-label="Textbook chapters">
                 <div id="wikiTopicsList"></div>
             </nav>
         </aside>
@@ -66,75 +78,19 @@
         <main class="wiki-main" id="wikiContent">
             
             <nav class="wiki-breadcrumb" id="wikiBreadcrumb" aria-label="Breadcrumb">
-                <!-- Dynamically updated: e.g. Wiki > Fundamentals > Qubit -->
-                <span>Wiki</span> &rsaquo; <span>Welcome</span>
+                <a href="#">Textbook</a><span aria-hidden="true">/</span><span>Contents</span>
             </nav>
 
             <div id="wikiTopicContent" class="wiki-topic-container">
-                <!-- Default Landing Content (shown when no topic is selected) -->
-                <div class="wiki-landing">
-                    <h1>Welcome to the Quantum Wiki</h1>
-                    <p class="subtitle">Select a topic from the sidebar to start learning</p>
-                    
-                    <div class="featured-topics grid">
-                        <div class="quantum-card hover-lift">
-                            <h3>Popular: Qubit</h3>
-                            <p>The fundamental unit of quantum information.</p>
-                            <button class="btn-ghost wiki-topic-btn" data-topic="qubit">Read &rarr;</button>
-                        </div>
-                        <div class="quantum-card hover-lift">
-                            <h3>Popular: Hadamard Gate</h3>
-                            <p>Create superposition in a single qubit.</p>
-                            <button class="btn-ghost wiki-topic-btn" data-topic="hadamard">Read &rarr;</button>
-                        </div>
-                        <div class="quantum-card hover-lift">
-                            <h3>Popular: Entanglement</h3>
-                            <p>"Spooky action at a distance."</p>
-                            <button class="btn-ghost wiki-topic-btn" data-topic="entanglement">Read &rarr;</button>
-                        </div>
-                    </div>
-                </div>
+                <noscript>This textbook needs JavaScript for chapter navigation and full-book search.</noscript>
             </div>
-
-            <!-- Template for a Wiki Topic (used by JS to populate wikiTopicContent) -->
-            <template id="wikiTopicTemplate">
-                <article class="wiki-article">
-                    <header class="wiki-header">
-                        <h1 class="topic-title"></h1>
-                        <div class="topic-meta">
-                            <span class="difficulty-stars" aria-label="Difficulty"></span>
-                            <span class="day-learned">Day <span class="day-num"></span></span>
-                            <span class="last-updated">Updated: <time></time></span>
-                        </div>
-                    </header>
-                    
-                    <div class="topic-summary quantum-card">
-                        <!-- Quick definition/summary goes here -->
-                    </div>
-                    
-                    <div class="topic-body">
-                        <!-- Main content (Math, Code, Explanations) injected here -->
-                    </div>
-                    
-                    <footer class="topic-footer">
-                        <h3>Related Topics</h3>
-                        <div class="related-topics-list">
-                            <!-- Related topic links -->
-                        </div>
-                    </footer>
-                </article>
-            </template>
         </main>
 
         <!-- Right Sidebar: Table of Contents -->
         <aside class="wiki-toc" id="wikiToc">
             <div class="toc-sticky-container">
-                <h3>On this page</h3>
                 <nav id="tocNav" aria-label="Table of contents">
-                    <ul class="toc-list">
-                        <!-- Auto-populated based on headers in main content -->
-                        <li class="toc-empty-msg">Select a topic to view its contents.</li>
-                    </ul>
+                    <p class="toc-empty-msg">Open a lesson to view its contents.</p>
                 </nav>
             </div>
         </aside>
@@ -144,7 +100,7 @@
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container footer-content">
-            <p>&copy; 2026 Do Quang Hao. Documenting the quantum journey.</p>
+            <p>&copy; 2026 Do Quang Hao. A living quantum computing textbook and research record.</p>
             <div class="footer-links">
                 <a href="../index.html">Main Portfolio</a>
                 <a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -155,30 +111,8 @@
 
     <!-- Scripts -->
     <script src="../js/main.js"></script>
-    <script src="../js/quantum-data.js"></script>
-    <script>
-        // Page specific initialization logic
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof renderMathInElement !== 'undefined') {
-                renderMathInElement(document.body, {
-                    delimiters: [
-                        {left: '$$', right: '$$', display: true},
-                        {left: '$', right: '$', display: false}
-                    ]
-                });
-            }
-            // Add function calls to handle the wiki UI logic
-            if (typeof initQuantumPage === 'function') { initQuantumPage(); }
-            
-            const sidebarToggle = document.getElementById('wikiSidebarToggle');
-            const wikiSidebar = document.getElementById('wikiSidebar') || document.querySelector('.wiki-sidebar');
-            if (sidebarToggle && wikiSidebar) {
-              sidebarToggle.addEventListener('click', () => {
-                wikiSidebar.classList.toggle('active');
-              });
-            }
-        });
-    </script>
+    <script src="../js/quantum-wiki-book-data.js"></script>
+    <script src="../js/quantum-wiki-book.js"></script>
     <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
 </body>
 </html>
