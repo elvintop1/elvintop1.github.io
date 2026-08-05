@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Journal | Do Quang Hao</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/quantum.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="container nav-container">
+        <a href="../index.html" class="nav-logo" aria-label="Home">
+          <span class="logo-bracket">&lt;</span>
+          <span class="logo-text">QR</span>
+          <span class="logo-bracket">/&gt;</span>
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="../index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html" class="nav-link">Hub</a></li>
+          <li><a href="blog.html" class="nav-link active">Journal</a></li>
+          <li><a href="wiki.html" class="nav-link">Wiki</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="quantum-header reveal">
+        <div class="container">
+            <h1 class="page-title">📝 Quantum Learning Journal</h1>
+            <p class="page-subtitle">Daily notes, insights, and experiments on my quantum computing journey</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container journal-page">
+        
+        <!-- Filter Bar -->
+        <section class="journal-filter reveal" aria-label="Filter journal entries">
+            <div class="search-box">
+                <input type="search" id="blogSearch" placeholder="Search entries..." aria-label="Search journal entries">
+            </div>
+            
+            <div class="filter-pills" id="blogFilters">
+                <button class="pill filter-pill active" data-filter="all" data-tag="all">All</button>
+                <button class="pill filter-pill" data-filter="Basics" data-tag="basics">Basics</button>
+                <button class="pill filter-pill" data-filter="Gates" data-tag="gates">Gates</button>
+                <button class="pill filter-pill" data-filter="Algorithms" data-tag="algorithms">Algorithms</button>
+                <button class="pill filter-pill" data-filter="Math" data-tag="math">Math</button>
+                <button class="pill filter-pill" data-filter="Qiskit" data-tag="qiskit">Qiskit</button>
+                <button class="pill filter-pill" data-filter="Theory" data-tag="theory">Theory</button>
+            </div>
+            
+            <div class="sort-toggle">
+                <label for="sortOrder" class="sr-only">Sort by:</label>
+                <select id="sortOrder" aria-label="Sort journal entries">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Blog Entries Container -->
+        <section class="blog-grid reveal" id="blogContainer" aria-live="polite">
+            <!-- Entries will be populated by JavaScript using the template below -->
+        </section>
+
+        <!-- Empty State -->
+        <div id="blogEmptyState" class="empty-state hidden">
+            <div class="empty-icon">🔍</div>
+            <h3>No entries found</h3>
+            <p>We couldn't find any journal entries matching your criteria.</p>
+            <button class="btn-primary" id="clearFiltersBtn">Clear Filters</button>
+        </div>
+
+    </main>
+
+    <!-- Template for Blog Card -->
+    <template id="blogCardTemplate">
+        <article class="journal-card quantum-card hover-lift">
+            <div class="card-meta">
+                <span class="day-badge">Day X</span>
+                <span class="status-badge">🌱 Seedling</span>
+                <time class="date-display">Date</time>
+            </div>
+            <h3 class="card-title">Title</h3>
+            <p class="card-excerpt">Excerpt...</p>
+            <div class="card-tags"></div>
+            <div class="card-footer">
+                <span class="reading-time">📖 X min read</span>
+                <button class="btn-ghost read-more" aria-label="Read full entry">Read More &rarr;</button>
+            </div>
+        </article>
+    </template>
+
+    <!-- Blog Modal / Expanded View -->
+    <div id="blogModal" class="modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
+        <div class="modal-container quantum-card">
+            <button class="modal-close" id="blogModalClose" aria-label="Close modal">&times;</button>
+            <div class="modal-content" id="blogModalContent">
+                <!-- Populated dynamically -->
+                <div class="modal-header">
+                    <div class="modal-meta">
+                        <span class="day-badge" id="modalDay"></span>
+                        <time id="modalDate"></time>
+                        <span class="status-badge" id="modalStatus"></span>
+                    </div>
+                    <h1 id="modalTitle"></h1>
+                    <div class="modal-tags" id="modalTags"></div>
+                </div>
+                <div class="modal-body" id="modalBody"></div>
+                <div class="modal-navigation">
+                    <button class="btn-ghost" id="prevEntryBtn">&larr; Previous Entry</button>
+                    <button class="btn-ghost" id="nextEntryBtn">Next Entry &rarr;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Do Quang Hao. Documenting the quantum journey.</p>
+            <div class="footer-links">
+                <a href="../index.html">Main Portfolio</a>
+                <a href="#">GitHub</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/quantum-data.js"></script>
+    <script>
+        // Page specific initialization logic
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+            // Add function calls to handle the blog UI logic
+            if (typeof initQuantumPage === 'function') { initQuantumPage(); }
+        });
+    </script>
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+</body>
+</html>

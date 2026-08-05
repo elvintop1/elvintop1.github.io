@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Computing Journey | Do Quang Hao</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/quantum.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="container nav-container">
+        <a href="../index.html" class="nav-logo" aria-label="Home">
+          <span class="logo-bracket">&lt;</span>
+          <span class="logo-text">QR</span>
+          <span class="logo-bracket">/&gt;</span>
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="../index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html" class="nav-link active">Hub</a></li>
+          <li><a href="blog.html" class="nav-link">Journal</a></li>
+          <li><a href="wiki.html" class="nav-link">Wiki</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="quantum-header reveal">
+        <div class="container">
+            <div class="wave-decoration" aria-hidden="true">
+                <!-- Simple Wave SVG Placeholder -->
+                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+            <h1 class="page-title">⚛ Quantum Computing Journey</h1>
+            <p class="page-subtitle">Documenting my learning path through the quantum realm</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Stats Dashboard -->
+        <section class="stats-section reveal" aria-labelledby="stats-heading">
+            <h2 id="stats-heading" class="sr-only">Learning Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon">📅</div>
+                    <div class="stat-number number" id="totalDays">15</div>
+                    <div class="stat-label label">Days Learned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon">📚</div>
+                    <div class="stat-number number" id="totalTopics">8</div>
+                    <div class="stat-label label">Topics Covered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon">🔥</div>
+                    <div class="stat-number number" id="currentStreak">5 days</div>
+                    <div class="stat-label label">Current Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon">📝</div>
+                    <div class="stat-number number" id="totalEntries">12</div>
+                    <div class="stat-label label">Journal Entries</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Roadmap -->
+        <section class="roadmap-section reveal" aria-labelledby="roadmap-heading">
+            <h2 id="roadmap-heading" class="section-title">🚀 Learning Roadmap</h2>
+            <div class="roadmap-timeline">
+                
+                <div class="timeline-node completed">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">✅ COMPLETED</span>
+                        <h3>Mathematical Foundations</h3>
+                        <p class="week-label">Week 1</p>
+                        <p>Linear algebra, complex numbers, Dirac notation</p>
+                        <div class="tags">
+                            <span class="tag">Math</span>
+                            <span class="tag">Prerequisites</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-node completed">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">✅ COMPLETED</span>
+                        <h3>Qubit Basics</h3>
+                        <p class="week-label">Week 2</p>
+                        <p>Single qubit states, Bloch sphere, measurement</p>
+                        <div class="tags">
+                            <span class="tag">Qubits</span>
+                            <span class="tag">Fundamentals</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-node completed">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">✅ COMPLETED</span>
+                        <h3>Quantum Gates</h3>
+                        <p class="week-label">Week 3</p>
+                        <p>Pauli gates, Hadamard, Phase, CNOT</p>
+                        <div class="tags">
+                            <span class="tag">Gates</span>
+                            <span class="tag">Circuits</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-node active">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">🔄 IN PROGRESS</span>
+                        <h3>Quantum Circuits &amp; Entanglement</h3>
+                        <p class="week-label">Week 4</p>
+                        <p>Multi-qubit systems, Bell states, circuit composition</p>
+                        <div class="progress-bar" aria-label="Progress: 60%">
+                            <div class="fill" style="width: 60%;"></div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">Entanglement</span>
+                            <span class="tag">Circuits</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-node locked">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">🔒 PLANNED</span>
+                        <h3>Quantum Algorithms I</h3>
+                        <p class="week-label">Week 5</p>
+                        <p>Deutsch-Jozsa, Bernstein-Vazirani, Simon's</p>
+                        <div class="tags">
+                            <span class="tag">Algorithms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-node locked">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">🔒 PLANNED</span>
+                        <h3>Quantum Algorithms II</h3>
+                        <p class="week-label">Week 6</p>
+                        <p>Grover's search, Quantum Fourier Transform</p>
+                        <div class="tags">
+                            <span class="tag">Algorithms</span>
+                            <span class="tag">QFT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-node locked">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">🔒 PLANNED</span>
+                        <h3>Shor's Algorithm &amp; Cryptography</h3>
+                        <p class="week-label">Week 7</p>
+                        <p>Integer factorization, RSA implications</p>
+                        <div class="tags">
+                            <span class="tag">Cryptography</span>
+                            <span class="tag">Shor</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-node locked">
+                    <div class="node-marker"></div>
+                    <div class="node-content quantum-card hover-lift">
+                        <span class="status-label">🔒 PLANNED</span>
+                        <h3>Quantum Error Correction</h3>
+                        <p class="week-label">Week 8</p>
+                        <p>Error models, stabilizer codes, surface codes</p>
+                        <div class="tags">
+                            <span class="tag">QEC</span>
+                            <span class="tag">Advanced</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Recent Journal Entries -->
+        <section class="recent-journal-section reveal" aria-labelledby="recent-journal-heading">
+            <div class="section-header">
+                <h2 id="recent-journal-heading">📝 Recent Journal Entries</h2>
+                <a href="blog.html" class="btn-ghost">View All &rarr;</a>
+            </div>
+            <!-- Populated by JS -->
+            <div class="recent-blog-grid" id="recentBlogEntries">
+                <!-- Placeholder cards removed to be populated by JS later, or leave empty -->
+                <p class="loading-text">Loading recent entries...</p>
+            </div>
+        </section>
+
+        <!-- Wiki Topics Preview -->
+        <section class="wiki-preview-section reveal" aria-labelledby="wiki-preview-heading">
+            <div class="section-header">
+                <h2 id="wiki-preview-heading">📖 Knowledge Base</h2>
+                <a href="wiki.html" class="btn-ghost">Explore All &rarr;</a>
+            </div>
+            <div class="wiki-category-grid">
+                <div class="category-card quantum-card hover-lift">
+                    <div class="category-icon">📐</div>
+                    <h3 class="category-name">Fundamentals</h3>
+                    <p class="category-count">5 Topics</p>
+                    <p class="category-desc">Core concepts, math, and introductory principles.</p>
+                </div>
+                <div class="category-card quantum-card hover-lift">
+                    <div class="category-icon">🔲</div>
+                    <h3 class="category-name">Quantum Gates</h3>
+                    <p class="category-count">8 Topics</p>
+                    <p class="category-desc">Single and multi-qubit operations and matrices.</p>
+                </div>
+                <div class="category-card quantum-card hover-lift">
+                    <div class="category-icon">🧮</div>
+                    <h3 class="category-name">Algorithms</h3>
+                    <p class="category-count">4 Topics</p>
+                    <p class="category-desc">Quantum algorithms providing exponential speedups.</p>
+                </div>
+                <div class="category-card quantum-card hover-lift">
+                    <div class="category-icon">🔬</div>
+                    <h3 class="category-name">Applications</h3>
+                    <p class="category-count">3 Topics</p>
+                    <p class="category-desc">Real-world uses of quantum computing.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Do Quang Hao. Documenting the quantum journey.</p>
+            <div class="footer-links">
+                <a href="../index.html">Main Portfolio</a>
+                <a href="#">GitHub</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/quantum-data.js"></script>
+    <script>
+        // Page specific initialization logic
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+            // Add function calls to populate #recentBlogEntries from quantum-data.js if available
+            if(typeof renderRecentEntries === 'function') {
+                renderRecentEntries('recentBlogEntries');
+            }
+        });
+    </script>
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+</body>
+</html>
