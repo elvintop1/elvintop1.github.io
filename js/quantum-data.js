@@ -932,6 +932,20 @@ window.quantumWiki = {
 let currentWeekIndex = 0;
 let lastWeekTrigger = null;
 
+window.slugifyQuantumLesson = function(title) {
+  return title
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
+window.getQuantumLessonHref = function(week, lesson) {
+  const topic = window.slugifyQuantumLesson(lesson.title);
+  return `lesson.html?week=${week.week}&topic=${encodeURIComponent(topic)}`;
+};
+
 window.renderQuantumRoadmap = function() {
   const container = document.getElementById('roadmapTimeline');
   if (!container || !window.quantumWeeks) return;
@@ -996,11 +1010,15 @@ window.renderWeekContent = function(week) {
       <section class="week-content-section" aria-labelledby="week-lessons-${week.week}">
         <p class="content-kicker">02 · Curriculum</p>
         <h3 id="week-lessons-${week.week}">What to study</h3>
+        <p class="lesson-list-intro">Select a lesson to open its complete study page.</p>
         <ol class="lesson-list">
           ${week.lessons.map((lesson, index) => `
             <li>
-              <span class="lesson-index">${String(index + 1).padStart(2, '0')}</span>
-              <div><h4>${lesson.title}</h4><p>${lesson.detail}</p></div>
+              <a class="lesson-link" href="${window.getQuantumLessonHref(week, lesson)}" aria-label="Open lesson: ${lesson.title}">
+                <span class="lesson-index">${String(index + 1).padStart(2, '0')}</span>
+                <span class="lesson-link-content"><strong>${lesson.title}</strong><span>${lesson.detail}</span></span>
+                <span class="lesson-link-arrow" aria-hidden="true">&rarr;</span>
+              </a>
             </li>
           `).join('')}
         </ol>
