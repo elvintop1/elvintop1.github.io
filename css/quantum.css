@@ -70,6 +70,43 @@
   letter-spacing: -0.035em;
 }
 
+.roadmap-intro {
+  max-width: 760px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.roadmap-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.roadmap-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.completed-dot {
+  background: var(--blue);
+}
+
+.active-dot {
+  background: #b77a86;
+}
+
 .roadmap-timeline {
   position: relative;
   max-width: 820px;
@@ -125,6 +162,62 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
+}
+
+.week-card {
+  display: block;
+  width: 100%;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.week-card:hover,
+.week-card:focus-visible {
+  border-color: var(--blue);
+  background: #fcfdff;
+}
+
+.week-card-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.week-open-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.week-card:hover .week-open-label,
+.week-card:focus-visible .week-open-label {
+  color: var(--blue);
+}
+
+.stage-label {
+  display: block;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.week-summary {
+  display: block;
+  max-width: 690px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.week-card .progress-bar,
+.week-card .tags {
+  display: flex;
 }
 
 .node-content h3,
@@ -365,6 +458,10 @@
   display: flex;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 .modal-container {
   position: relative;
   width: min(780px, 100%);
@@ -455,6 +552,276 @@
   margin-top: 28px;
   padding-top: 18px;
   border-top: 1px solid var(--line);
+}
+
+.week-modal-container {
+  width: min(920px, 100%);
+  padding: 42px 46px;
+}
+
+.week-modal-header {
+  margin-bottom: 34px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.week-modal-header h2 {
+  max-width: 720px;
+  margin-top: 12px;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  letter-spacing: -0.035em;
+}
+
+.week-modal-header > p {
+  max-width: 760px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.week-modal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 18px;
+  padding-right: 42px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.week-number {
+  color: var(--blue);
+}
+
+.week-at-a-glance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.week-at-a-glance strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.week-content-section {
+  margin-top: 42px;
+}
+
+.week-content-section:first-child {
+  margin-top: 0;
+}
+
+.week-modal-body .week-content-section > h3 {
+  margin: 6px 0 18px;
+  font-size: 1.65rem;
+}
+
+.content-kicker {
+  margin: 0;
+  color: var(--blue);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.objective-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+  list-style: none;
+  background: var(--line);
+}
+
+.objective-list li {
+  position: relative;
+  min-height: 96px;
+  margin: 0;
+  padding: 20px 20px 20px 40px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.objective-list li::before {
+  content: "";
+  position: absolute;
+  top: 27px;
+  left: 20px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--blue);
+  border-radius: 50%;
+}
+
+.lesson-list {
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.lesson-list li {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 14px;
+  margin: 0;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.lesson-index {
+  color: var(--blue);
+  font-size: 10px;
+}
+
+.lesson-list h4,
+.equation-card h4 {
+  margin-bottom: 5px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.lesson-list p,
+.equation-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.equation-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.equation-card {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.equation-card .math-block {
+  margin: 12px 0;
+  padding: 13px;
+  font-size: 12px;
+}
+
+.practice-list {
+  counter-reset: practice;
+  padding: 0;
+  list-style: none;
+}
+
+.practice-list li {
+  position: relative;
+  min-height: 52px;
+  margin: 0;
+  padding: 14px 14px 14px 48px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 12px;
+  counter-increment: practice;
+}
+
+.practice-list li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.practice-list li::before {
+  content: counter(practice);
+  position: absolute;
+  top: 13px;
+  left: 8px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--blue);
+  font-size: 9px;
+}
+
+.completion-section {
+  padding: 24px;
+  border: 1px solid #d8e1ec;
+  border-radius: 10px;
+  background: var(--blue-pale);
+}
+
+.completion-list {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.completion-list li {
+  display: grid;
+  grid-template-columns: 17px minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.check-box {
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  border: 1px solid #b8c9df;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.resource-list {
+  border-top: 1px solid var(--line);
+}
+
+.resource-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.resource-list a:hover {
+  color: var(--blue);
+}
+
+.week-navigation {
+  align-items: center;
+  position: sticky;
+  bottom: -42px;
+  margin-inline: -46px;
+  padding: 16px 46px;
+  background: rgba(255, 255, 255, 0.97);
+}
+
+.week-navigation .btn-ghost:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.week-position {
+  color: var(--muted);
+  font-size: 10px;
 }
 
 .wiki-layout {
@@ -647,6 +1014,11 @@
   .wiki-sidebar.active {
     display: block;
   }
+
+  .objective-list,
+  .equation-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 520px) {
@@ -672,5 +1044,29 @@
 
   .modal-container {
     padding: 28px 20px;
+  }
+
+  .week-modal-container {
+    padding: 34px 20px;
+  }
+
+  .week-card-topline {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .week-open-label {
+    order: 2;
+  }
+
+  .week-navigation {
+    bottom: -34px;
+    margin-inline: -20px;
+    padding: 13px 20px;
+  }
+
+  .week-position {
+    display: none;
   }
 }
