@@ -1,8 +1,8 @@
 # Do Quang Hao - Research Portfolio
 
-Personal research portfolio for Do Quang Hao, a Computer Science graduate student at Ho Chi Minh University of Technology.
+Personal quantum computing portfolio for Do Quang Hao, a Computer Science graduate from Ho Chi Minh University of Technology.
 
-The site highlights research interests, selected AI/ML projects, thesis work, professional experience, technical skills, education, and honors. It also includes a linked quantum computing learning journal.
+The site highlights quantum computing interests, undergraduate thesis work on quantum data encoding, education, and an ongoing quantum learning journal.
 
 ## Live site
 

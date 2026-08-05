@@ -16,9 +16,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <!-- Custom CSS -->
-    <link rel="icon" href="../assets/do-quang-hao.jpg" type="image/jpeg">
+    <link rel="icon" href="../assets/avatar.png" type="image/png">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/animations.css">
     <link rel="stylesheet" href="../css/quantum.css">
 </head>
 <body>
@@ -26,11 +25,10 @@
     <nav class="navbar" id="navbar">
       <div class="container nav-container">
         <a href="../index.html" class="nav-logo" aria-label="Home">
-          <span class="logo-bracket">&lt;</span>
-          <span class="logo-text">QR</span>
-          <span class="logo-bracket">/&gt;</span>
+          <span class="logo-mark">HQ</span>
+          <span class="logo-name">Do Quang Hao</span>
         </a>
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
           <span></span><span></span><span></span>
         </button>
         <ul class="nav-links" id="navLinks">
@@ -43,16 +41,10 @@
     </nav>
 
     <!-- Header Section -->
-    <header class="quantum-header reveal">
+    <header class="quantum-header">
         <div class="container">
-            <div class="wave-decoration" aria-hidden="true">
-                <!-- Simple Wave SVG Placeholder -->
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
-                </svg>
-            </div>
-            <h1 class="page-title">⚛ Quantum Computing Journey</h1>
-            <p class="page-subtitle">Documenting my learning path through the quantum realm</p>
+            <h1 class="page-title">Quantum Computing Notebook</h1>
+            <p class="page-subtitle">A simple record of what I study, understand, and want to explore next.</p>
         </div>
     </header>
 
@@ -60,26 +52,26 @@
     <main class="container">
         
         <!-- Stats Dashboard -->
-        <section class="stats-section reveal" aria-labelledby="stats-heading">
+        <section class="stats-section" aria-labelledby="stats-heading">
             <h2 id="stats-heading" class="sr-only">Learning Statistics</h2>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon icon">📅</div>
+                    <div class="stat-icon icon">01</div>
                     <div class="stat-number number" id="totalDays">15</div>
                     <div class="stat-label label">Days Learned</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon icon">📚</div>
+                    <div class="stat-icon icon">02</div>
                     <div class="stat-number number" id="totalTopics">8</div>
                     <div class="stat-label label">Topics Covered</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon icon">🔥</div>
+                    <div class="stat-icon icon">03</div>
                     <div class="stat-number number" id="currentStreak">5 days</div>
                     <div class="stat-label label">Current Streak</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon icon">📝</div>
+                    <div class="stat-icon icon">04</div>
                     <div class="stat-number number" id="totalEntries">12</div>
                     <div class="stat-label label">Journal Entries</div>
                 </div>
@@ -87,8 +79,8 @@
         </section>
 
         <!-- Learning Roadmap -->
-        <section class="roadmap-section reveal" aria-labelledby="roadmap-heading">
-            <h2 id="roadmap-heading" class="section-title">🚀 Learning Roadmap</h2>
+        <section class="roadmap-section" aria-labelledby="roadmap-heading">
+            <h2 id="roadmap-heading" class="section-title">Learning roadmap</h2>
             <div class="roadmap-timeline">
                 
                 <div class="timeline-node completed">
@@ -209,9 +201,9 @@
         </section>
 
         <!-- Recent Journal Entries -->
-        <section class="recent-journal-section reveal" aria-labelledby="recent-journal-heading">
+        <section class="recent-journal-section" aria-labelledby="recent-journal-heading">
             <div class="section-header">
-                <h2 id="recent-journal-heading">📝 Recent Journal Entries</h2>
+                <h2 id="recent-journal-heading">Recent journal entries</h2>
                 <a href="blog.html" class="btn-ghost">View All &rarr;</a>
             </div>
             <!-- Populated by JS -->
@@ -222,9 +214,9 @@
         </section>
 
         <!-- Wiki Topics Preview -->
-        <section class="wiki-preview-section reveal" aria-labelledby="wiki-preview-heading">
+        <section class="wiki-preview-section" aria-labelledby="wiki-preview-heading">
             <div class="section-header">
-                <h2 id="wiki-preview-heading">📖 Knowledge Base</h2>
+                <h2 id="wiki-preview-heading">Knowledge base</h2>
                 <a href="wiki.html" class="btn-ghost">Explore All &rarr;</a>
             </div>
             <div class="wiki-category-grid">
@@ -263,8 +255,8 @@
             <p>&copy; 2026 Do Quang Hao. Documenting the quantum journey.</p>
             <div class="footer-links">
                 <a href="../index.html">Main Portfolio</a>
-                <a href="#">GitHub</a>
-                <a href="#">LinkedIn</a>
+                <a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://www.linkedin.com/in/hao-do-907897194/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
         </div>
     </footer>
@@ -285,7 +277,7 @@
             }
             // Add function calls to populate #recentBlogEntries from quantum-data.js if available
             if(typeof renderRecentEntries === 'function') {
-                renderRecentEntries('recentBlogEntries');
+                renderRecentEntries(3);
             }
         });
     </script>

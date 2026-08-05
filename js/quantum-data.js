@@ -431,6 +431,7 @@ window.renderBlogModal = function(entry) {
   `;
   
   window.siteUtils.renderMath(content);
+  modal.classList.remove('hidden');
   modal.classList.add('active');
   modal.style.display = 'flex';
 };
@@ -440,6 +441,7 @@ window.closeBlogModal = function() {
   if (modal) {
     modal.classList.remove('active');
     modal.style.display = 'none';
+    modal.classList.add('hidden');
   }
 };
 
@@ -629,6 +631,27 @@ window.initQuantumPage = function() {
   if (page.includes('wiki') || document.getElementById('wikiSidebar')) {
     window.renderWikiSidebar();
     window.loadTopicFromHash();
+
+    document.querySelectorAll('.wiki-topic-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const topicKey = button.getAttribute('data-topic');
+        const categoryEntry = Object.entries(window.quantumWiki).find(([, category]) => category.topics[topicKey]);
+        if (!categoryEntry) return;
+        const [categoryKey] = categoryEntry;
+        window.renderWikiTopic(categoryKey, topicKey);
+        window.location.hash = `${categoryKey}/${topicKey}`;
+      });
+    });
+
+    const wikiSearch = document.getElementById('wikiSearch');
+    if (wikiSearch) {
+      wikiSearch.addEventListener('input', () => {
+        const searchTerm = wikiSearch.value.trim().toLowerCase();
+        document.querySelectorAll('#wikiTopicsList li').forEach(item => {
+          item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
+        });
+      });
+    }
   }
   if (document.getElementById('recentBlogEntries')) {
     window.renderRecentEntries(3);

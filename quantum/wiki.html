@@ -16,9 +16,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
     <!-- Custom CSS -->
-    <link rel="icon" href="../assets/do-quang-hao.jpg" type="image/jpeg">
+    <link rel="icon" href="../assets/avatar.png" type="image/png">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/animations.css">
     <link rel="stylesheet" href="../css/quantum.css">
 </head>
 <body>
@@ -26,11 +25,10 @@
     <nav class="navbar" id="navbar">
       <div class="container nav-container">
         <a href="../index.html" class="nav-logo" aria-label="Home">
-          <span class="logo-bracket">&lt;</span>
-          <span class="logo-text">QR</span>
-          <span class="logo-bracket">/&gt;</span>
+          <span class="logo-mark">HQ</span>
+          <span class="logo-name">Do Quang Hao</span>
         </a>
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
           <span></span><span></span><span></span>
         </button>
         <ul class="nav-links" id="navLinks">
@@ -43,7 +41,7 @@
     </nav>
 
     <!-- Main Wiki Layout -->
-    <div class="wiki-layout container reveal">
+    <div class="wiki-layout container">
         
         <!-- Mobile Sidebar Toggle -->
         <button class="mobile-sidebar-toggle" id="wikiSidebarToggle" aria-label="Toggle Wiki Menu">
@@ -57,63 +55,7 @@
             </div>
             
             <nav class="wiki-nav" aria-label="Wiki Categories">
-                <!-- Fundamentals -->
-                <details class="wiki-category" open>
-                    <summary>📐 Fundamentals</summary>
-                    <ul class="wiki-topic-list">
-                        <li><button class="wiki-topic-btn" data-topic="qubit">Qubit</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="superposition">Superposition</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="entanglement">Entanglement</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="measurement">Measurement</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="dirac-notation">Dirac Notation</button></li>
-                    </ul>
-                </details>
-
-                <!-- Quantum Gates -->
-                <details class="wiki-category" open>
-                    <summary>🔲 Quantum Gates</summary>
-                    <ul class="wiki-topic-list">
-                        <li><button class="wiki-topic-btn" data-topic="pauli-x">Pauli-X Gate</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="pauli-y">Pauli-Y Gate</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="pauli-z">Pauli-Z Gate</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="hadamard">Hadamard Gate</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="cnot">CNOT Gate</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="phase">Phase Gate</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="toffoli">Toffoli Gate</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="swap">SWAP Gate</button></li>
-                    </ul>
-                </details>
-
-                <!-- Algorithms -->
-                <details class="wiki-category">
-                    <summary>🧮 Algorithms</summary>
-                    <ul class="wiki-topic-list">
-                        <li><button class="wiki-topic-btn" data-topic="deutsch-jozsa">Deutsch-Jozsa</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="grover">Grover's Search</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="shor">Shor's Algorithm</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="qft">Quantum Fourier Transform</button></li>
-                    </ul>
-                </details>
-
-                <!-- Applications -->
-                <details class="wiki-category">
-                    <summary>🔬 Applications</summary>
-                    <ul class="wiki-topic-list">
-                        <li><button class="wiki-topic-btn" data-topic="crypto">Quantum Cryptography</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="qml">Quantum Machine Learning</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="chemistry">Quantum Chemistry</button></li>
-                    </ul>
-                </details>
-
-                <!-- Tools & Frameworks -->
-                <details class="wiki-category">
-                    <summary>🛠️ Tools &amp; Frameworks</summary>
-                    <ul class="wiki-topic-list">
-                        <li><button class="wiki-topic-btn" data-topic="qiskit">Qiskit</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="cirq">Cirq</button></li>
-                        <li><button class="wiki-topic-btn" data-topic="pennylane">Pennylane</button></li>
-                    </ul>
-                </details>
+                <div id="wikiTopicsList"></div>
             </nav>
         </aside>
 
@@ -202,8 +144,8 @@
             <p>&copy; 2026 Do Quang Hao. Documenting the quantum journey.</p>
             <div class="footer-links">
                 <a href="../index.html">Main Portfolio</a>
-                <a href="#">GitHub</a>
-                <a href="#">LinkedIn</a>
+                <a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://www.linkedin.com/in/hao-do-907897194/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
         </div>
     </footer>
