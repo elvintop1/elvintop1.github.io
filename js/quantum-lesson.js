@@ -73,6 +73,32 @@
   const equations = getRelevantEquations(week, lesson);
   const recommendedLab = week.practice[lessonIndex % week.practice.length];
   const lessonNumber = lessonIndex + 1;
+  const lessonNotesKey = `${week.week}-${window.slugifyQuantumLesson(lesson.title)}`;
+  const lessonNotes = window.quantumLessonNotes?.[lessonNotesKey] || null;
+  const detailedNotesMarkup = lessonNotes ? `
+    <section class="lesson-section" aria-labelledby="lesson-detailed-notes">
+      <p class="content-kicker">03 · Detailed notes</p>
+      <h2 id="lesson-detailed-notes">Understand the topic in depth</h2>
+      <div class="detailed-note-copy">
+        ${lessonNotes.explanation.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+      </div>
+      <div class="detailed-note-grid">
+        <article class="key-idea-panel">
+          <h3>Key ideas</h3>
+          <ul>${lessonNotes.keyIdeas.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+        </article>
+        <article class="worked-example-panel">
+          <span>Concrete example</span>
+          <p>${escapeHtml(lessonNotes.example)}</p>
+        </article>
+      </div>
+      <aside class="pitfall-panel">
+        <h3>Common mistakes</h3>
+        <ul>${lessonNotes.pitfalls.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+      </aside>
+    </section>
+  ` : '';
+  const numberedSection = base => String(base + (lessonNotes ? 1 : 0)).padStart(2, '0');
 
   const getFlatLessonHref = item => window.getQuantumLessonHref(item.week, item.lesson);
 
@@ -152,8 +178,10 @@
           </div>
         </section>
 
+        ${detailedNotesMarkup}
+
         <section class="lesson-section" aria-labelledby="lesson-study-sequence">
-          <p class="content-kicker">03 · Study sequence</p>
+          <p class="content-kicker">${numberedSection(3)} · Study sequence</p>
           <h2 id="lesson-study-sequence">A reliable way to learn it</h2>
           <ol class="study-sequence">
             <li><span>01</span><div><h3>Build the vocabulary</h3><p>Write a one-sentence definition for every core concept above. Mark any term that depends on an earlier lesson and revisit that prerequisite first.</p></div></li>
@@ -164,7 +192,7 @@
         </section>
 
         <section class="lesson-section" aria-labelledby="lesson-equations">
-          <p class="content-kicker">04 · Mathematical reference</p>
+          <p class="content-kicker">${numberedSection(4)} · Mathematical reference</p>
           <h2 id="lesson-equations">Equations to connect with this topic</h2>
           <div class="lesson-equation-list">
             ${equations.map(equation => `
@@ -179,7 +207,7 @@
         </section>
 
         <section class="lesson-section" aria-labelledby="lesson-checkpoints">
-          <p class="content-kicker">05 · Check your understanding</p>
+          <p class="content-kicker">${numberedSection(5)} · Check your understanding</p>
           <h2 id="lesson-checkpoints">Questions you should be able to answer</h2>
           <ol class="checkpoint-list">
             <li><span>01</span><p>What problem or description does <strong>${escapeHtml(lesson.title)}</strong> provide, and what information is required to use it correctly?</p></li>
@@ -190,7 +218,7 @@
         </section>
 
         <section class="lesson-section lesson-practice-box" aria-labelledby="lesson-practice">
-          <p class="content-kicker">06 · Practice</p>
+          <p class="content-kicker">${numberedSection(6)} · Practice</p>
           <h2 id="lesson-practice">Apply the lesson</h2>
           <div class="recommended-lab">
             <span>Recommended week lab</span>
@@ -204,7 +232,7 @@
         </section>
 
         <section class="lesson-section" aria-labelledby="lesson-completion">
-          <p class="content-kicker">07 · Completion criteria</p>
+          <p class="content-kicker">${numberedSection(7)} · Completion criteria</p>
           <h2 id="lesson-completion">Before continuing</h2>
           <ul class="completion-list lesson-completion-list">
             ${week.checklist.map(item => `<li><span class="check-box" aria-hidden="true"></span>${escapeHtml(item)}</li>`).join('')}
@@ -212,7 +240,7 @@
         </section>
 
         <section class="lesson-section" aria-labelledby="lesson-resources">
-          <p class="content-kicker">08 · Primary sources</p>
+          <p class="content-kicker">${numberedSection(8)} · Primary sources</p>
           <h2 id="lesson-resources">Continue with authoritative material</h2>
           <div class="resource-list">
             ${week.resources.map(resource => `
@@ -243,5 +271,13 @@
     </div>
   `;
 
-  if (window.siteUtils?.renderMath) window.siteUtils.renderMath(pageContainer);
+  const renderLessonMath = () => {
+    if (window.siteUtils?.renderMath) window.siteUtils.renderMath(pageContainer);
+  };
+
+  renderLessonMath();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderLessonMath, { once: true });
+  }
+  window.addEventListener('load', renderLessonMath, { once: true });
 })();
