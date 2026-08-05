@@ -76,13 +76,15 @@
   const lessonNotesKey = `${week.week}-${window.slugifyQuantumLesson(lesson.title)}`;
   const lessonNotes = window.quantumLessonNotes?.[lessonNotesKey] || null;
   const course = window.quantumCourse || {};
+  const module = window.quantumModules?.[week.week] || null;
+  const moduleLesson = module?.lessons?.find(item => item.title === lesson.title) || null;
   const foundation = course.foundationsByWeek?.[week.week] || null;
   const lab = course.labs?.[week.week] || null;
   const bookGuide = course.bookGuides?.[week.week] || null;
   const lessonVariation = lab?.variations?.[lessonIndex] || recommendedLab;
   const detailedNotesMarkup = lessonNotes ? `
     <section class="lesson-section" aria-labelledby="lesson-detailed-notes">
-      <p class="content-kicker">04 · Detailed notes</p>
+      <p class="content-kicker">06 · Detailed notes</p>
       <h2 id="lesson-detailed-notes">Understand the topic in depth</h2>
       <div class="detailed-note-copy">
         ${lessonNotes.explanation.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
@@ -105,7 +107,7 @@
   ` : '';
   const derivationMarkup = lessonNotes ? `
     <section class="lesson-section" aria-labelledby="lesson-derivation">
-      <p class="content-kicker">05 · First-principles walkthrough</p>
+      <p class="content-kicker">07 · First-principles walkthrough</p>
       <h2 id="lesson-derivation">Build the result instead of memorizing it</h2>
       <ol class="derivation-steps lesson-derivation-steps">
         <li><span>1</span><div><strong>Name the object</strong><p>${escapeHtml(lessonNotes.explanation[0])}</p></div></li>
@@ -118,7 +120,7 @@
   ` : '';
   const foundationMarkup = foundation ? `
     <section class="lesson-section prerequisite-section" aria-labelledby="lesson-prerequisites">
-      <p class="content-kicker">02 · Prerequisite bridge</p>
+      <p class="content-kicker">03 · Prerequisite bridge</p>
       <h2 id="lesson-prerequisites">What must make sense first</h2>
       <p class="lesson-driving-question">${escapeHtml(foundation.question)}</p>
       <p>${escapeHtml(foundation.bridge)}</p>
@@ -137,7 +139,7 @@
   ` : '';
   const labMarkup = lab ? `
     <section class="lesson-section" aria-labelledby="lesson-code-lab">
-      <p class="content-kicker">07 · Guided code lab</p>
+      <p class="content-kicker">09 · Guided code lab</p>
       <h2 id="lesson-code-lab">${escapeHtml(lab.title)}</h2>
       <p>${escapeHtml(lab.objective)}</p>
       <div class="lab-focus-strip">
@@ -158,7 +160,7 @@
   ` : '';
   const exerciseMarkup = lessonNotes ? `
     <section class="lesson-section" aria-labelledby="lesson-exercises">
-      <p class="content-kicker">08 · Exercises with guidance</p>
+      <p class="content-kicker">10 · Exercises with guidance</p>
       <h2 id="lesson-exercises">Check whether you can use the idea</h2>
       <div class="exercise-stack">
         <article>
@@ -182,8 +184,40 @@
       </div>
     </section>
   ` : '';
-
   const getFlatLessonHref = item => window.getQuantumLessonHref(item.week, item.lesson);
+  const moduleThreadMarkup = module ? `
+    <section class="lesson-section module-thread-section" aria-labelledby="lesson-module-thread">
+      <p class="content-kicker">02 · Module thread</p>
+      <h2 id="lesson-module-thread">Where this lesson fits</h2>
+      <p class="lesson-driving-question">${escapeHtml(module.essentialQuestion)}</p>
+      <p>${escapeHtml(module.thesis)}</p>
+      <div class="lesson-connection-row">
+        <div>
+          <span>Arrives from</span>
+          ${previous ? `<a href="${getFlatLessonHref(previous)}">${escapeHtml(previous.lesson.title)} &larr;</a>` : '<strong>Start of the curriculum</strong>'}
+        </div>
+        <div>
+          <span>Continues to</span>
+          ${next ? `<a href="${getFlatLessonHref(next)}">${escapeHtml(next.lesson.title)} &rarr;</a>` : '<strong>End of the completed curriculum</strong>'}
+        </div>
+      </div>
+      <a class="module-reading-link" href="module.html?week=${week.week}"><span>Read continuously</span><strong>Open the complete Week ${week.week} lecture &rarr;</strong></a>
+    </section>
+  ` : '';
+  const lectureMarkup = moduleLesson ? `
+    <section class="lesson-section lecture-narrative-section" aria-labelledby="lesson-lecture-narrative">
+      <p class="content-kicker">05 · Connected lecture</p>
+      <h2 id="lesson-lecture-narrative">${escapeHtml(moduleLesson.question)}</h2>
+      <div class="lecture-prose">
+        ${moduleLesson.explanation.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+      </div>
+      <aside class="lecture-checkpoint">
+        <span>Teaching checkpoint</span>
+        <p>${escapeHtml(moduleLesson.checkpoint)}</p>
+      </aside>
+      <div class="lecture-transition"><strong>Why the next idea follows</strong><p>${escapeHtml(moduleLesson.transition)}</p></div>
+    </section>
+  ` : '';
 
   document.title = `${lesson.title} | Week ${week.week} Quantum Lesson`;
   const descriptionMeta = document.querySelector('meta[name="description"]');
@@ -219,6 +253,7 @@
             `;
           }).join('')}
         </ol>
+        <a class="sidebar-module-link" href="module.html?week=${week.week}"><span>Connected lecture</span><strong>Read all six lessons as one chapter</strong></a>
         <a class="sidebar-foundation-link" href="start-here.html"><span>New learner path</span><strong>Mathematics + physics from scratch</strong></a>
         <a class="back-to-week" href="index.html#week-${week.week}">&larr; Back to Week ${week.week}</a>
       </aside>
@@ -248,10 +283,12 @@
           </aside>
         </section>
 
+        ${moduleThreadMarkup}
+
         ${foundationMarkup}
 
         <section class="lesson-section" aria-labelledby="lesson-concepts">
-          <p class="content-kicker">03 · Core concepts</p>
+          <p class="content-kicker">04 · Core concepts</p>
           <h2 id="lesson-concepts">Ideas you need to understand</h2>
           <div class="concept-grid">
             ${concepts.map((concept, index) => `
@@ -264,12 +301,14 @@
           </div>
         </section>
 
+        ${lectureMarkup}
+
         ${detailedNotesMarkup}
 
         ${derivationMarkup}
 
         <section class="lesson-section" aria-labelledby="lesson-equations">
-          <p class="content-kicker">06 · Mathematical reference</p>
+          <p class="content-kicker">08 · Mathematical reference</p>
           <h2 id="lesson-equations">Equations to connect with this topic</h2>
           <div class="lesson-equation-list">
             ${equations.map(equation => `
@@ -288,7 +327,7 @@
         ${exerciseMarkup}
 
         <section class="lesson-section" aria-labelledby="lesson-completion">
-          <p class="content-kicker">09 · Completion criteria</p>
+          <p class="content-kicker">11 · Completion criteria</p>
           <h2 id="lesson-completion">Before continuing</h2>
           <ul class="completion-list lesson-completion-list">
             ${week.checklist.map(item => `<li><span class="check-box" aria-hidden="true"></span>${escapeHtml(item)}</li>`).join('')}
@@ -296,7 +335,7 @@
         </section>
 
         <section class="lesson-section" aria-labelledby="lesson-resources">
-          <p class="content-kicker">10 · Reading guide and primary sources</p>
+          <p class="content-kicker">12 · Reading guide and primary sources</p>
           <h2 id="lesson-resources">Read the textbook with a purpose</h2>
           ${bookGuide ? `
             <article class="book-guide-card">

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dated research notes organized by quantum-computing direction, with derivations, code, sources, and open questions.">
+    <title>Quantum Research Notes | Do Quang Hao</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="icon" href="../assets/avatar.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quantum.css">
+</head>
+<body>
+    <a class="skip-link" href="#researchContent">Skip to research notes</a>
+    <nav class="navbar" id="navbar">
+      <div class="container nav-container">
+        <a href="../index.html" class="nav-logo" aria-label="Home"><span class="logo-mark">HQ</span><span class="logo-name">Do Quang Hao</span></a>
+        <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="../index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html" class="nav-link">Hub</a></li>
+          <li><a href="start-here.html" class="nav-link">Start Here</a></li>
+          <li><a href="research.html" class="nav-link active">Research</a></li>
+          <li><a href="blog.html" class="nav-link">Journal</a></li>
+          <li><a href="wiki.html" class="nav-link">Wiki</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <header class="research-header">
+      <div class="container">
+        <p class="content-kicker">Dated notes · Organized by research direction</p>
+        <h1>Quantum Research<br>Notebook</h1>
+        <p>Long-form investigations that record the question, derivation, experiment, evidence, limitations, sources, and next questions—not only the final conclusion.</p>
+        <dl class="research-stats" id="researchStats" aria-label="Research notebook statistics"></dl>
+      </div>
+    </header>
+
+    <main class="container research-page" id="researchContent">
+      <section class="research-tracks-section" aria-labelledby="research-tracks-heading">
+        <div class="section-header">
+          <div><p class="content-kicker">Research directions</p><h2 id="research-tracks-heading">Follow a line of inquiry</h2></div>
+          <a class="btn-ghost" href="module.html?week=11">Return to curriculum</a>
+        </div>
+        <div class="research-track-grid" id="researchTrackGrid"></div>
+      </section>
+
+      <section class="research-notes-section" aria-labelledby="research-notes-heading">
+        <div class="section-header">
+          <div><p class="content-kicker">Daily record</p><h2 id="research-notes-heading">Notes by date</h2></div>
+        </div>
+        <div class="research-toolbar">
+          <label class="research-search"><span class="sr-only">Search research notes</span><input type="search" id="researchSearch" placeholder="Search questions, findings, and tags..."></label>
+          <label><span class="sr-only">Filter by research direction</span><select id="researchTrackFilter"><option value="all">All directions</option></select></label>
+          <label><span class="sr-only">Sort notes</span><select id="researchSort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
+        </div>
+        <div id="researchTimeline" class="research-timeline" aria-live="polite"></div>
+        <div id="researchEmpty" class="research-empty hidden"><h3>No matching research note</h3><p>Try another term or return to all directions.</p><button id="researchReset" class="btn-ghost" type="button">Reset filters</button></div>
+      </section>
+
+      <section class="research-method-section">
+        <p class="content-kicker">Notebook method</p>
+        <h2>How each new note is structured</h2>
+        <div class="research-method-grid">
+          <article><span>01</span><h3>Question</h3><p>State one falsifiable or answerable research question.</p></article>
+          <article><span>02</span><h3>Derivation</h3><p>Connect assumptions, mathematics, and the claimed mechanism.</p></article>
+          <article><span>03</span><h3>Experiment</h3><p>Keep executable code, expected output, and baselines together.</p></article>
+          <article><span>04</span><h3>Limits</h3><p>Record access models, uncertainty, failure cases, and open questions.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <p>&copy; 2026 Do Quang Hao. Documenting the quantum journey.</p>
+        <div class="footer-links"><a href="index.html">Quantum Hub</a><a href="blog.html">Daily Journal</a><a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/quantum-research-data.js"></script>
+    <script src="../js/quantum-research.js"></script>
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">&uarr;</button>
+</body>
+</html>

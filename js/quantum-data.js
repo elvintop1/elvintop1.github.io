@@ -996,6 +996,7 @@ window.renderWeekContent = function(week) {
         <span><strong>${week.practice.length}</strong> practical tasks</span>
         <span><strong>${week.equations.length}</strong> key equations</span>
       </div>
+      ${week.week <= 11 ? `<a class="module-overview-link" href="module.html?week=${week.week}"><span>Connected lecture</span><strong>Read all six lessons as one continuous chapter &rarr;</strong></a>` : ''}
     </header>
 
     <div class="modal-body week-modal-body">
