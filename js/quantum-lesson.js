@@ -75,9 +75,14 @@
   const lessonNumber = lessonIndex + 1;
   const lessonNotesKey = `${week.week}-${window.slugifyQuantumLesson(lesson.title)}`;
   const lessonNotes = window.quantumLessonNotes?.[lessonNotesKey] || null;
+  const course = window.quantumCourse || {};
+  const foundation = course.foundationsByWeek?.[week.week] || null;
+  const lab = course.labs?.[week.week] || null;
+  const bookGuide = course.bookGuides?.[week.week] || null;
+  const lessonVariation = lab?.variations?.[lessonIndex] || recommendedLab;
   const detailedNotesMarkup = lessonNotes ? `
     <section class="lesson-section" aria-labelledby="lesson-detailed-notes">
-      <p class="content-kicker">03 · Detailed notes</p>
+      <p class="content-kicker">04 · Detailed notes</p>
       <h2 id="lesson-detailed-notes">Understand the topic in depth</h2>
       <div class="detailed-note-copy">
         ${lessonNotes.explanation.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
@@ -98,7 +103,85 @@
       </aside>
     </section>
   ` : '';
-  const numberedSection = base => String(base + (lessonNotes ? 1 : 0)).padStart(2, '0');
+  const derivationMarkup = lessonNotes ? `
+    <section class="lesson-section" aria-labelledby="lesson-derivation">
+      <p class="content-kicker">05 · First-principles walkthrough</p>
+      <h2 id="lesson-derivation">Build the result instead of memorizing it</h2>
+      <ol class="derivation-steps lesson-derivation-steps">
+        <li><span>1</span><div><strong>Name the object</strong><p>${escapeHtml(lessonNotes.explanation[0])}</p></div></li>
+        <li><span>2</span><div><strong>State the rule or assumption</strong><p>${escapeHtml(lessonNotes.keyIdeas[0])}</p></div></li>
+        <li><span>3</span><div><strong>Connect the mathematics</strong><div class="math-block compact-math">$$${equations[0]?.latex || ''}$$</div><p>${escapeHtml(equations[0]?.note || '')}</p></div></li>
+        <li><span>4</span><div><strong>Work the smallest non-trivial case</strong><p>${escapeHtml(lessonNotes.example)}</p></div></li>
+        <li><span>5</span><div><strong>Try to break the reasoning</strong><p>Test the claim against this common failure mode: ${escapeHtml(lessonNotes.pitfalls[0])}</p></div></li>
+      </ol>
+    </section>
+  ` : '';
+  const foundationMarkup = foundation ? `
+    <section class="lesson-section prerequisite-section" aria-labelledby="lesson-prerequisites">
+      <p class="content-kicker">02 · Prerequisite bridge</p>
+      <h2 id="lesson-prerequisites">What must make sense first</h2>
+      <p class="lesson-driving-question">${escapeHtml(foundation.question)}</p>
+      <p>${escapeHtml(foundation.bridge)}</p>
+      <div class="prerequisite-grid">
+        <div>
+          <h3>Required before this lesson</h3>
+          <ul>${foundation.prerequisites.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+        </div>
+        <aside>
+          <span>Missing a prerequisite?</span>
+          <p>The Start Here course develops the mathematics and physics without assuming prior quantum mechanics.</p>
+          <a href="start-here.html">Open Start Here &rarr;</a>
+        </aside>
+      </div>
+    </section>
+  ` : '';
+  const labMarkup = lab ? `
+    <section class="lesson-section" aria-labelledby="lesson-code-lab">
+      <p class="content-kicker">07 · Guided code lab</p>
+      <h2 id="lesson-code-lab">${escapeHtml(lab.title)}</h2>
+      <p>${escapeHtml(lab.objective)}</p>
+      <div class="lab-focus-strip">
+        <div><span>Environment</span><strong>${escapeHtml(lab.tool)}</strong></div>
+        <div><span>This lesson's extension</span><strong>${escapeHtml(lessonVariation)}</strong></div>
+      </div>
+      <div class="code-lab-shell">
+        <div class="code-lab-toolbar"><span>${escapeHtml(lab.tool)}</span><button class="copy-code" type="button">Copy</button></div>
+        <pre><code>${escapeHtml(lab.code)}</code></pre>
+      </div>
+      <div class="lab-install"><strong>Install</strong><code>${escapeHtml(lab.install)}</code></div>
+      <aside class="expected-result"><strong>Expected result</strong><p>${escapeHtml(lab.expected)}</p></aside>
+      <div class="code-explanation">
+        <h3>Read the result scientifically</h3>
+        <ol>${lab.explain.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol>
+      </div>
+    </section>
+  ` : '';
+  const exerciseMarkup = lessonNotes ? `
+    <section class="lesson-section" aria-labelledby="lesson-exercises">
+      <p class="content-kicker">08 · Exercises with guidance</p>
+      <h2 id="lesson-exercises">Check whether you can use the idea</h2>
+      <div class="exercise-stack">
+        <article>
+          <span>Exercise 01 · Explain</span>
+          <h3>Explain ${escapeHtml(lesson.title.toLowerCase())} without using an analogy.</h3>
+          <p class="exercise-hint"><strong>Hint:</strong> Name the mathematical object, the operation or rule, and the observable prediction.</p>
+          <details class="answer-panel"><summary>Reveal answer guide</summary><div><p>${escapeHtml(lessonNotes.explanation.join(' '))}</p></div></details>
+        </article>
+        <article>
+          <span>Exercise 02 · Calculate</span>
+          <h3>Reproduce the worked case line by line, then change one input.</h3>
+          <p class="exercise-hint"><strong>Hint:</strong> Check dimensions, normalization, and probability sums at every line.</p>
+          <details class="answer-panel"><summary>Reveal worked starting point</summary><div><p>${escapeHtml(lessonNotes.example)}</p><p>Your changed input may have a different numerical answer; verify it independently with the lab.</p></div></details>
+        </article>
+        <article>
+          <span>Exercise 03 · Debug</span>
+          <h3>Find and correct a tempting misconception.</h3>
+          <p class="exercise-hint"><strong>Claim to inspect:</strong> ${escapeHtml(lessonNotes.pitfalls[0])}</p>
+          <details class="answer-panel"><summary>Reveal correction criteria</summary><div><p>A correct response must identify the violated definition or assumption, replace the claim precisely, and give a calculation or experiment that distinguishes the two.</p></div></details>
+        </article>
+      </div>
+    </section>
+  ` : '';
 
   const getFlatLessonHref = item => window.getQuantumLessonHref(item.week, item.lesson);
 
@@ -136,6 +219,7 @@
             `;
           }).join('')}
         </ol>
+        <a class="sidebar-foundation-link" href="start-here.html"><span>New learner path</span><strong>Mathematics + physics from scratch</strong></a>
         <a class="back-to-week" href="index.html#week-${week.week}">&larr; Back to Week ${week.week}</a>
       </aside>
 
@@ -164,8 +248,10 @@
           </aside>
         </section>
 
+        ${foundationMarkup}
+
         <section class="lesson-section" aria-labelledby="lesson-concepts">
-          <p class="content-kicker">02 · Core concepts</p>
+          <p class="content-kicker">03 · Core concepts</p>
           <h2 id="lesson-concepts">Ideas you need to understand</h2>
           <div class="concept-grid">
             ${concepts.map((concept, index) => `
@@ -180,19 +266,10 @@
 
         ${detailedNotesMarkup}
 
-        <section class="lesson-section" aria-labelledby="lesson-study-sequence">
-          <p class="content-kicker">${numberedSection(3)} · Study sequence</p>
-          <h2 id="lesson-study-sequence">A reliable way to learn it</h2>
-          <ol class="study-sequence">
-            <li><span>01</span><div><h3>Build the vocabulary</h3><p>Write a one-sentence definition for every core concept above. Mark any term that depends on an earlier lesson and revisit that prerequisite first.</p></div></li>
-            <li><span>02</span><div><h3>Move between representations</h3><p>Express the topic in words, equations, circuit or operator form, and a small concrete example. Note which representation makes each property easiest to see.</p></div></li>
-            <li><span>03</span><div><h3>Verify a minimal case</h3><p>Calculate or simulate the smallest non-trivial example. Check normalization, dimensions, probability sums, or complexity assumptions as appropriate.</p></div></li>
-            <li><span>04</span><div><h3>Test the boundary</h3><p>Change one assumption, parameter, input state, or noise condition. Record what changes and what remains invariant instead of memorizing only the ideal case.</p></div></li>
-          </ol>
-        </section>
+        ${derivationMarkup}
 
         <section class="lesson-section" aria-labelledby="lesson-equations">
-          <p class="content-kicker">${numberedSection(4)} · Mathematical reference</p>
+          <p class="content-kicker">06 · Mathematical reference</p>
           <h2 id="lesson-equations">Equations to connect with this topic</h2>
           <div class="lesson-equation-list">
             ${equations.map(equation => `
@@ -206,33 +283,12 @@
           <p class="lesson-caption">Do not memorize a formula in isolation. Check the meaning and dimension of every symbol, then state the conditions under which the expression is valid.</p>
         </section>
 
-        <section class="lesson-section" aria-labelledby="lesson-checkpoints">
-          <p class="content-kicker">${numberedSection(5)} · Check your understanding</p>
-          <h2 id="lesson-checkpoints">Questions you should be able to answer</h2>
-          <ol class="checkpoint-list">
-            <li><span>01</span><p>What problem or description does <strong>${escapeHtml(lesson.title)}</strong> provide, and what information is required to use it correctly?</p></li>
-            <li><span>02</span><p>How are <strong>${escapeHtml(concepts[0] || lesson.title)}</strong> and <strong>${escapeHtml(concepts[1] || week.title)}</strong> connected? Give a mathematical, circuit-based, or operational example.</p></li>
-            <li><span>03</span><p>Which assumption, limitation, or implementation cost is easiest to overlook in this topic?</p></li>
-            <li><span>04</span><p>How would you verify your result with a hand calculation, simulator, classical baseline, or repeated experiment?</p></li>
-          </ol>
-        </section>
+        ${labMarkup}
 
-        <section class="lesson-section lesson-practice-box" aria-labelledby="lesson-practice">
-          <p class="content-kicker">${numberedSection(6)} · Practice</p>
-          <h2 id="lesson-practice">Apply the lesson</h2>
-          <div class="recommended-lab">
-            <span>Recommended week lab</span>
-            <p>${escapeHtml(recommendedLab)}</p>
-          </div>
-          <ul class="micro-exercise-list">
-            <li>Create a one-page note that defines ${escapeHtml(concepts.slice(0, 3).join(', '))} and connects them with arrows or equations.</li>
-            <li>Construct the smallest valid example of ${escapeHtml(lesson.title.toLowerCase())}; predict the result before calculating or simulating it.</li>
-            <li>Write down one failure mode or misconception, then design a test that exposes it.</li>
-          </ul>
-        </section>
+        ${exerciseMarkup}
 
         <section class="lesson-section" aria-labelledby="lesson-completion">
-          <p class="content-kicker">${numberedSection(7)} · Completion criteria</p>
+          <p class="content-kicker">09 · Completion criteria</p>
           <h2 id="lesson-completion">Before continuing</h2>
           <ul class="completion-list lesson-completion-list">
             ${week.checklist.map(item => `<li><span class="check-box" aria-hidden="true"></span>${escapeHtml(item)}</li>`).join('')}
@@ -240,8 +296,17 @@
         </section>
 
         <section class="lesson-section" aria-labelledby="lesson-resources">
-          <p class="content-kicker">${numberedSection(8)} · Primary sources</p>
-          <h2 id="lesson-resources">Continue with authoritative material</h2>
+          <p class="content-kicker">10 · Reading guide and primary sources</p>
+          <h2 id="lesson-resources">Read the textbook with a purpose</h2>
+          ${bookGuide ? `
+            <article class="book-guide-card">
+              <span>Course textbook</span>
+              <h3>${escapeHtml(bookGuide.title)}</h3>
+              <p class="book-pages">${escapeHtml(bookGuide.pages)}</p>
+              <p><strong>Read for:</strong> ${escapeHtml(bookGuide.focus)}</p>
+              <p>${escapeHtml(bookGuide.note)}</p>
+            </article>
+          ` : ''}
           <div class="resource-list">
             ${week.resources.map(resource => `
               <a href="${escapeHtml(resource.url)}" target="_blank" rel="noopener noreferrer">
@@ -280,4 +345,17 @@
     document.addEventListener('DOMContentLoaded', renderLessonMath, { once: true });
   }
   window.addEventListener('load', renderLessonMath, { once: true });
+
+  pageContainer.querySelectorAll('.copy-code').forEach(button => {
+    button.addEventListener('click', async () => {
+      const code = button.closest('.code-lab-shell')?.querySelector('code')?.textContent || '';
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = 'Copied';
+        window.setTimeout(() => { button.textContent = 'Copy'; }, 1400);
+      } catch (_) {
+        button.textContent = 'Select code';
+      }
+    });
+  });
 })();

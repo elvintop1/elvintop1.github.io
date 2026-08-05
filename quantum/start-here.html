@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A from-scratch mathematical, physical, and Qiskit introduction to quantum computing.">
+    <title>Start Here: Quantum Computing from Scratch | Do Quang Hao</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="icon" href="../assets/avatar.png" type="image/png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/quantum.css">
+</head>
+<body>
+    <a class="skip-link" href="#courseContent">Skip to course</a>
+
+    <nav class="navbar" id="navbar">
+      <div class="container nav-container">
+        <a href="../index.html" class="nav-logo" aria-label="Home">
+          <span class="logo-mark">HQ</span>
+          <span class="logo-name">Do Quang Hao</span>
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="../index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html" class="nav-link">Hub</a></li>
+          <li><a href="start-here.html" class="nav-link active">Start Here</a></li>
+          <li><a href="blog.html" class="nav-link">Journal</a></li>
+          <li><a href="wiki.html" class="nav-link">Wiki</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="foundation-page" id="courseContent">
+      <div class="container">
+        <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Quantum Hub</a><span aria-hidden="true">/</span><span aria-current="page">Start Here</span>
+        </nav>
+
+        <header class="foundation-hero">
+          <p class="content-kicker">Zero prerequisites · Mathematics + Physics + Python</p>
+          <h1>Quantum computing<br>from scratch</h1>
+          <p>This is the missing entry point before Week 1. It develops the minimum mathematics and quantum physics needed to understand why a circuit works, then turns those ideas into executable Qiskit experiments. You do not need prior quantum mechanics.</p>
+          <div class="foundation-hero-actions">
+            <a class="btn-primary" href="#chapter-1">Begin with numbers</a>
+            <a class="btn-ghost" href="index.html#week-1">Open the 12-week roadmap</a>
+          </div>
+          <dl class="foundation-outcomes">
+            <div><dt>6</dt><dd>foundation chapters</dd></div>
+            <div><dt>4</dt><dd>worked calculations</dd></div>
+            <div><dt>3</dt><dd>guided code labs</dd></div>
+            <div><dt>0</dt><dd>physics prerequisites</dd></div>
+          </dl>
+        </header>
+
+        <div class="foundation-layout">
+          <aside class="foundation-toc" aria-label="Course contents">
+            <p class="content-kicker">On this page</p>
+            <ol>
+              <li><a href="#chapter-0"><span>00</span>How to learn</a></li>
+              <li><a href="#chapter-1"><span>01</span>Complex numbers</a></li>
+              <li><a href="#chapter-2"><span>02</span>Vectors and matrices</a></li>
+              <li><a href="#chapter-3"><span>03</span>Probability</a></li>
+              <li><a href="#chapter-4"><span>04</span>Quantum postulates</a></li>
+              <li><a href="#chapter-5"><span>05</span>One qubit</a></li>
+              <li><a href="#chapter-6"><span>06</span>Python and Qiskit</a></li>
+            </ol>
+          </aside>
+
+          <article class="foundation-course">
+            <section class="foundation-chapter" id="chapter-0">
+              <p class="content-kicker">Chapter 00</p>
+              <h2>How to learn this subject</h2>
+              <p>Quantum computing becomes manageable when every concept is expressed in four connected languages: plain words, linear algebra, a physical experiment, and code. If one representation feels mysterious, move to another and then return.</p>
+              <div class="representation-grid">
+                <article><span>01</span><h3>Words</h3><p>State exactly what is prepared, transformed, and measured.</p></article>
+                <article><span>02</span><h3>Mathematics</h3><p>Write the vector, operator, basis, and probability rule.</p></article>
+                <article><span>03</span><h3>Physics</h3><p>Describe the repeatable procedure that gives the symbols meaning.</p></article>
+                <article><span>04</span><h3>Code</h3><p>Predict first, simulate second, and compare the two.</p></article>
+              </div>
+              <aside class="course-callout">
+                <strong>The central habit</strong>
+                <p>Never read a circuit only as a picture. Track the state after each gate, identify the basis used for measurement, and check that all probabilities sum to one.</p>
+              </aside>
+              <h3 class="foundation-subheading">Your first learning loop</h3>
+              <ol class="derivation-steps">
+                <li><span>1</span><div><strong>Predict</strong><p>Calculate a tiny case by hand, even if it is only one or two qubits.</p></div></li>
+                <li><span>2</span><div><strong>Implement</strong><p>Build the same preparation and transformation in NumPy or Qiskit.</p></div></li>
+                <li><span>3</span><div><strong>Validate</strong><p>Check norm, exact probabilities, finite-shot counts, and any conserved quantities.</p></div></li>
+                <li><span>4</span><div><strong>Stress</strong><p>Change one phase, basis, parameter, or noise assumption and explain the difference.</p></div></li>
+              </ol>
+            </section>
+
+            <section class="foundation-chapter" id="chapter-1">
+              <p class="content-kicker">Chapter 01 · Mathematical foundation</p>
+              <h2>Complex numbers and amplitudes</h2>
+              <p>A complex number has a real part and an imaginary part:</p>
+              <div class="math-block">$$z=a+ib,\qquad i^2=-1.$$</div>
+              <p>Its complex conjugate reverses the sign of the imaginary part, $z^*=a-ib$. Multiplying a number by its conjugate gives a non-negative real number:</p>
+              <div class="math-block">$$|z|^2=z^*z=a^2+b^2.$$</div>
+              <p>This is exactly what quantum theory needs. Amplitudes may carry phase, allowing interference, while squared magnitudes become ordinary probabilities.</p>
+
+              <h3 class="foundation-subheading">Polar form and phase</h3>
+              <p>Euler's identity connects circular geometry with complex algebra:</p>
+              <div class="math-block">$$e^{i\phi}=\cos\phi+i\sin\phi,\qquad z=re^{i\phi}.$$</div>
+              <p>The magnitude $r$ controls probability weight. The angle $\phi$ is phase. Multiplying an entire state by $e^{i\gamma}$ is a global phase and changes no measurement probability. Changing only one component changes a relative phase and can alter later interference.</p>
+
+              <article class="worked-calculation">
+                <p class="content-kicker">Worked calculation 01</p>
+                <h3>Normalize two complex amplitudes</h3>
+                <p>Take the unnormalized vector $v=(1,1+i)^T$. Its squared norm is</p>
+                <div class="math-block">$$\|v\|^2=|1|^2+|1+i|^2=1+2=3.$$</div>
+                <p>Therefore $|\psi\rangle=v/\sqrt3$. Measurement in this coordinate basis gives</p>
+                <div class="math-block">$$p(0)=\frac13,\qquad p(1)=\frac{|1+i|^2}{3}=\frac23.$$</div>
+                <p>The checkpoint is $p(0)+p(1)=1$.</p>
+              </article>
+
+              <details class="answer-panel">
+                <summary>Check yourself: global or relative phase?</summary>
+                <div><p>$|\psi\rangle$ and $i|\psi\rangle$ differ only by a global phase. In contrast, $(|0\rangle+|1\rangle)/\sqrt2$ and $(|0\rangle+i|1\rangle)/\sqrt2$ differ by a relative phase and can be distinguished by measurements outside the Z basis.</p></div>
+              </details>
+            </section>
+
+            <section class="foundation-chapter" id="chapter-2">
+              <p class="content-kicker">Chapter 02 · Mathematical foundation</p>
+              <h2>Vectors, inner products, and matrices</h2>
+              <p>A ket is a column vector. For a two-dimensional system, choose an orthonormal basis:</p>
+              <div class="math-block">$$|0\rangle=\begin{pmatrix}1\\0\end{pmatrix},\qquad |1\rangle=\begin{pmatrix}0\\1\end{pmatrix}.$$</div>
+              <p>A general vector is a linear combination $|\psi\rangle=\alpha|0\rangle+\beta|1\rangle$. Its bra is the conjugate transpose $\langle\psi|=(\alpha^*,\beta^*)$. The inner product $\langle\phi|\psi\rangle$ is a complex overlap; the outer product $|\psi\rangle\langle\phi|$ is a matrix.</p>
+
+              <div class="definition-grid">
+                <article><h3>Normalized</h3><div class="math-block">$$\langle\psi|\psi\rangle=1$$</div><p>The vector has unit length.</p></article>
+                <article><h3>Orthogonal</h3><div class="math-block">$$\langle\phi|\psi\rangle=0$$</div><p>The states can be perfectly distinguished in a suitable measurement.</p></article>
+                <article><h3>Hermitian</h3><div class="math-block">$$A^\dagger=A$$</div><p>An observable has real eigenvalues.</p></article>
+                <article><h3>Unitary</h3><div class="math-block">$$U^\dagger U=I$$</div><p>An isolated evolution preserves inner products and probability.</p></article>
+              </div>
+
+              <h3 class="foundation-subheading">Eigenvectors and measurement values</h3>
+              <p>If $A|a\rangle=a|a\rangle$, then $|a\rangle$ is an eigenvector and $a$ is its eigenvalue. For a Hermitian observable, the possible projective-measurement values are its eigenvalues. The spectral decomposition makes this explicit:</p>
+              <div class="math-block">$$A=\sum_a a|a\rangle\langle a|.$$</div>
+              <p>The expectation value is the probability-weighted average over many repetitions:</p>
+              <div class="math-block">$$\langle A\rangle_\psi=\langle\psi|A|\psi\rangle.$$</div>
+
+              <h3 class="foundation-subheading">Tensor products combine systems</h3>
+              <p>Two two-dimensional systems form a four-dimensional joint system:</p>
+              <div class="math-block">$$\mathbb C^2\otimes\mathbb C^2\cong\mathbb C^4,\qquad |0\rangle\otimes|1\rangle=|01\rangle.$$</div>
+              <p>Always declare the basis order before writing a matrix. This course uses $|00\rangle,|01\rangle,|10\rangle,|11\rangle$ for hand calculations and calls out Qiskit's displayed bit-string convention when it matters.</p>
+
+              <article class="worked-calculation">
+                <p class="content-kicker">Worked calculation 02</p>
+                <h3>Prove that Hadamard preserves probability</h3>
+                <div class="math-block">$$H=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix},\qquad H^\dagger H=I.$$</div>
+                <p>Because $H$ is real and symmetric, $H^\dagger=H$. Direct multiplication gives $H^2=I$. Therefore $\|H|\psi\rangle\|^2=\langle\psi|H^\dagger H|\psi\rangle=1$ for every normalized input.</p>
+              </article>
+            </section>
+
+            <section class="foundation-chapter" id="chapter-3">
+              <p class="content-kicker">Chapter 03 · Probability foundation</p>
+              <h2>Probability, sampling, and uncertainty</h2>
+              <p>A probability distribution assigns non-negative weights summing to one. An expectation is a long-run average, while a variance measures spread:</p>
+              <div class="math-block">$$\mathbb E[X]=\sum_x x\,p(x),\qquad \operatorname{Var}(X)=\mathbb E[X^2]-\mathbb E[X]^2.$$</div>
+              <p>Quantum amplitudes are not probabilities. First project the state onto an outcome and then square the magnitude. If the state is $|\psi\rangle$ and the outcome vector is $|m\rangle$, the Born rule is</p>
+              <div class="math-block">$$p(m)=|\langle m|\psi\rangle|^2.$$</div>
+              <p>On a simulator or device, a <em>shot</em> is one preparation–circuit–measurement trial. If $k$ successes occur in $N$ independent shots, $\hat p=k/N$ estimates the underlying probability. Its typical standard error is approximately</p>
+              <div class="math-block">$$\operatorname{SE}(\hat p)\approx\sqrt{\frac{p(1-p)}{N}}.$$</div>
+              <aside class="course-callout warning">
+                <strong>Do not confuse three layers</strong>
+                <p>Exact probability is a model prediction. Finite-shot fluctuation is sampling uncertainty. Hardware noise is a physical deviation from the ideal operation. More shots reduce the second, not automatically the third.</p>
+              </aside>
+
+              <article class="worked-calculation">
+                <p class="content-kicker">Worked calculation 03</p>
+                <h3>How many shots are enough?</h3>
+                <p>For a balanced outcome with $p=1/2$ and $N=1000$,</p>
+                <div class="math-block">$$\operatorname{SE}(\hat p)\approx\sqrt{\frac{0.25}{1000}}\approx0.0158.$$</div>
+                <p>A frequency near 0.48 or 0.52 is therefore ordinary sampling variation, not evidence that the Born rule failed.</p>
+              </article>
+            </section>
+
+            <section class="foundation-chapter" id="chapter-4">
+              <p class="content-kicker">Chapter 04 · Physics foundation</p>
+              <h2>The operational postulates of quantum mechanics</h2>
+              <p>Quantum mechanics is a framework for predicting statistics of physical experiments. For computing, its core can be organized into four rules. They are not derived from classical mechanics; they are the model we test against nature.</p>
+
+              <div class="postulate-list">
+                <article><span>01</span><div><h3>State</h3><p>An isolated physical system is represented by a unit vector $|\psi\rangle$ in a complex inner-product space. A density operator $\rho$ handles mixtures and subsystems.</p></div></article>
+                <article><span>02</span><div><h3>Evolution</h3><p>A closed system evolves unitarily: $|\psi'\rangle=U|\psi\rangle$. In continuous time, $U(t)=e^{-iHt/\hbar}$ for Hamiltonian $H$.</p></div></article>
+                <article><span>03</span><div><h3>Measurement</h3><p>Measurement operators $\{M_m\}$ satisfy $\sum_mM_m^\dagger M_m=I$. Outcome $m$ has probability $\langle\psi|M_m^\dagger M_m|\psi\rangle$.</p></div></article>
+                <article><span>04</span><div><h3>Composition</h3><p>The state space of systems A and B is $\mathcal H_A\otimes\mathcal H_B$. This rule permits joint states that cannot be separated into independent subsystem states.</p></div></article>
+              </div>
+
+              <h3 class="foundation-subheading">A physical bridge: Stern–Gerlach</h3>
+              <p>Imagine preparing many identically oriented spin-½ particles and sending them through an apparatus that separates two outcomes along a chosen axis. A Z-oriented preparation gives one deterministic Z outcome, while the same preparation measured along X divides into two statistical outcomes. Repeating the procedure reveals that “state” is not a hidden list of predetermined values for every axis; the chosen measurement basis matters.</p>
+              <p>A qubit abstracts this two-outcome quantum system. $|0\rangle$ and $|1\rangle$ label a chosen computational basis, not necessarily literal classical voltages. In different hardware they may represent different energy levels, spin states, photon modes, or other controlled degrees of freedom.</p>
+
+              <details class="answer-panel">
+                <summary>Why not say “the qubit is both 0 and 1”?</summary>
+                <div><p>That phrase hides the most important information: complex amplitudes and the chosen basis. A precise statement is that the state is a normalized linear combination of basis vectors, and different measurements sample distributions calculated from its projections.</p></div>
+              </details>
+            </section>
+
+            <section class="foundation-chapter" id="chapter-5">
+              <p class="content-kicker">Chapter 05 · First quantum model</p>
+              <h2>Derive one qubit from the rules</h2>
+              <p>Choose a two-dimensional basis and write the most general pure state:</p>
+              <div class="math-block">$$|\psi\rangle=\alpha|0\rangle+\beta|1\rangle,\qquad |\alpha|^2+|\beta|^2=1.$$</div>
+              <p>After normalization and removal of one global phase, two real parameters remain. They form the Bloch-sphere representation:</p>
+              <div class="math-block">$$|\psi\rangle=\cos\frac\theta2|0\rangle+e^{i\phi}\sin\frac\theta2|1\rangle.$$</div>
+              <p>A Z-basis measurement returns 0 with probability $\cos^2(\theta/2)$ and 1 with probability $\sin^2(\theta/2)$. The phase $\phi$ is invisible in Z populations but appears in X or Y statistics.</p>
+
+              <article class="worked-calculation">
+                <p class="content-kicker">Worked calculation 04</p>
+                <h3>Phase becomes population through interference</h3>
+                <p>The states $|+\rangle=(|0\rangle+|1\rangle)/\sqrt2$ and $|-\rangle=(|0\rangle-|1\rangle)/\sqrt2$ both look balanced in Z. Apply $H$:</p>
+                <div class="math-block">$$H|+\rangle=|0\rangle,\qquad H|-\rangle=|1\rangle.$$</div>
+                <p>The final measurement is deterministic and different. The sign was not a hidden probability; it was relative phase that controlled interference.</p>
+              </article>
+
+              <h3 class="foundation-subheading">From one qubit to entanglement</h3>
+              <p>Start with $|00\rangle$. Apply H to the first qubit and CNOT from the first to the second:</p>
+              <div class="math-block">$$|00\rangle\xrightarrow{H\otimes I}\frac{|00\rangle+|10\rangle}{\sqrt2}\xrightarrow{\mathrm{CNOT}}\frac{|00\rangle+|11\rangle}{\sqrt2}.$$</div>
+              <p>The final state cannot be written as $|a\rangle\otimes|b\rangle$. Each qubit alone is maximally mixed, but the pair has perfect joint correlations. This distinction between local and joint information powers teleportation, superdense coding, and error correction.</p>
+            </section>
+
+            <section class="foundation-chapter" id="chapter-6">
+              <p class="content-kicker">Chapter 06 · Programming foundation</p>
+              <h2>Set up Python and current Qiskit</h2>
+              <p>Create an isolated environment so course dependencies do not conflict with other Python projects:</p>
+              <div class="code-lab-shell">
+                <div class="code-lab-toolbar"><span>Terminal</span><button class="copy-code" type="button">Copy</button></div>
+                <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install qiskit numpy matplotlib jupyterlab
+
+# Optional, needed for the Week 8 noise lab:
+python -m pip install qiskit-aer</code></pre>
+              </div>
+              <p>The core lessons use exact local statevectors before introducing shot sampling or noise. This isolates mathematical mistakes from hardware effects and does not require an IBM Cloud account.</p>
+
+              <h3 class="foundation-subheading">Lab A · statevector before shots</h3>
+              <div class="code-lab-shell">
+                <div class="code-lab-toolbar"><span>Python · Qiskit SDK</span><button class="copy-code" type="button">Copy</button></div>
+                <pre><code>from qiskit import QuantumCircuit
+from qiskit.quantum_info import Statevector
+
+qc = QuantumCircuit(1)
+qc.h(0)
+
+state = Statevector.from_instruction(qc)
+print(state)
+print(state.probabilities_dict())
+
+state.seed(42)
+print(state.sample_counts(1000))</code></pre>
+              </div>
+              <ol class="lab-questions">
+                <li>Predict the two amplitudes before running the code.</li>
+                <li>Why are the exact probabilities equal while the two counts need not be identical?</li>
+                <li>Replace H with Ry(π/3). Calculate the answer before changing the code.</li>
+              </ol>
+              <details class="answer-panel">
+                <summary>Lab A · expected reasoning</summary>
+                <div><p>$H|0\rangle=|+\rangle$, so both amplitudes are $1/\sqrt2$ and both exact probabilities are 1/2. Counts fluctuate because 1,000 shots are a finite random sample. For $R_y(\pi/3)|0\rangle$, probabilities are $\cos^2(\pi/6)=3/4$ and $\sin^2(\pi/6)=1/4$.</p></div>
+              </details>
+
+              <h3 class="foundation-subheading">Lab B · Bell state with the V2 sampler</h3>
+              <div class="code-lab-shell">
+                <div class="code-lab-toolbar"><span>Python · Qiskit SDK</span><button class="copy-code" type="button">Copy</button></div>
+                <pre><code>from qiskit import QuantumCircuit
+from qiskit.primitives import StatevectorSampler
+
+bell = QuantumCircuit(2)
+bell.h(0)
+bell.cx(0, 1)
+bell.measure_all()
+
+sampler = StatevectorSampler(seed=42)
+result = sampler.run([bell], shots=1000).result()
+counts = result[0].data.meas.get_counts()
+print(counts)</code></pre>
+              </div>
+              <p>The ideal results contain 00 and 11 but not 01 or 10. Do not summarize this as “both bits were known in advance.” The joint state predicts correlations, while each local outcome remains random.</p>
+
+              <h3 class="foundation-subheading">Lab C · exact expectation value</h3>
+              <div class="code-lab-shell">
+                <div class="code-lab-toolbar"><span>Python · quantum_info</span><button class="copy-code" type="button">Copy</button></div>
+                <pre><code>from qiskit import QuantumCircuit
+from qiskit.quantum_info import Pauli, Statevector
+
+qc = QuantumCircuit(1)
+qc.ry(0.8, 0)
+qc.rz(0.4, 0)
+state = Statevector.from_instruction(qc)
+
+for label in ["X", "Y", "Z"]:
+    value = state.expectation_value(Pauli(label)).real
+    print(label, value)
+</code></pre>
+              </div>
+              <p>These three expectations are the Bloch-vector coordinates. Check that $\langle X\rangle^2+\langle Y\rangle^2+\langle Z\rangle^2=1$ for this pure state.</p>
+
+              <aside class="course-callout">
+                <strong>Ready for Week 1 when…</strong>
+                <ul>
+                  <li>You can normalize a complex vector and compute squared magnitudes.</li>
+                  <li>You know the difference between transpose and conjugate transpose.</li>
+                  <li>You can explain why a unitary preserves total probability.</li>
+                  <li>You can predict H|0⟩ and the Bell-state circuit before running code.</li>
+                </ul>
+              </aside>
+
+              <div class="foundation-next">
+                <p class="content-kicker">Continue the course</p>
+                <h3>Week 1 · Mathematical Language of Quantum Computing</h3>
+                <p>Now turn the foundations into fluency with bases, operators, spectra, Dirac notation, and tensor products.</p>
+                <a class="btn-primary" href="lesson.html?week=1&amp;topic=complex-amplitudes">Open the first lesson &rarr;</a>
+              </div>
+            </section>
+
+            <section class="foundation-sources" aria-labelledby="foundation-sources-title">
+              <p class="content-kicker">Source and version notes</p>
+              <h2 id="foundation-sources-title">What this course is built on</h2>
+              <p>The mathematical and quantum-mechanical sequence follows the subject structure of Nielsen and Chuang, especially Chapters 1–2, but the explanations, examples, and exercises here are newly written for this curriculum. Qiskit code follows the current SDK interfaces rather than the book's older software era.</p>
+              <div class="resource-list">
+                <a href="https://quantum.cloud.ibm.com/docs/en/guides/install-qiskit" target="_blank" rel="noopener noreferrer"><span>IBM Quantum · Install Qiskit</span><span aria-hidden="true">&nearr;</span></a>
+                <a href="https://quantum.cloud.ibm.com/docs/en/guides/simulate-with-qiskit-sdk-primitives" target="_blank" rel="noopener noreferrer"><span>IBM Quantum · Exact simulation with SDK primitives</span><span aria-hidden="true">&nearr;</span></a>
+                <a href="https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.quantum_info.Statevector" target="_blank" rel="noopener noreferrer"><span>IBM Quantum · Statevector API</span><span aria-hidden="true">&nearr;</span></a>
+              </div>
+            </section>
+          </article>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <p>&copy; 2026 Do Quang Hao. Documenting the quantum journey.</p>
+        <div class="footer-links">
+          <a href="index.html">Quantum Hub</a>
+          <a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/hao-do-907897194/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        window.siteUtils?.renderMath(document.getElementById('courseContent'));
+        document.querySelectorAll('.copy-code').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const code = button.closest('.code-lab-shell')?.querySelector('code')?.textContent || '';
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = 'Copied';
+              setTimeout(() => { button.textContent = 'Copy'; }, 1400);
+            } catch (_) {
+              button.textContent = 'Select code';
+            }
+          });
+        });
+      });
+      window.addEventListener('load', () => window.siteUtils?.renderMath(document.getElementById('courseContent')), { once: true });
+    </script>
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">&uarr;</button>
+</body>
+</html>
