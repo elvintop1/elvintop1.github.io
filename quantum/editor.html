@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wiki Editor | Do Quang Hao</title>
+  <meta name="description" content="Authorized editor for the Quantum Computing Textbook.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src https://api.github.com; img-src 'self' data:; base-uri 'self'; form-action 'self'">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+  <script defer src="../assets/vendor/katex/katex.min.js"></script>
+  <script defer src="../assets/vendor/katex/auto-render.min.js"></script>
+  <link rel="icon" href="../assets/avatar.png" type="image/png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/quantum.css">
+</head>
+<body class="wiki-editor-body">
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo" aria-label="Home"><span class="logo-mark">HQ</span><span class="logo-name">Do Quang Hao</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Hub</a></li>
+        <li><a href="research.html" class="nav-link">Research</a></li>
+        <li><a href="papers.html" class="nav-link">Papers</a></li>
+        <li><a href="wiki.html" class="nav-link">Wiki</a></li>
+        <li><a href="editor.html" class="nav-link active">Editor</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="wiki-editor-page">
+    <header class="wiki-editor-hero container">
+      <p class="content-kicker">Authorized publishing workspace</p>
+      <h1>Quantum Wiki Editor</h1>
+      <p>Create or revise textbook lessons through a structured form. Published content is versioned in GitHub and appears in the Wiki after GitHub Pages finishes updating.</p>
+    </header>
+
+    <section class="wiki-editor-auth container" id="editorAuth" aria-labelledby="editorAuthTitle">
+      <div>
+        <p class="content-kicker">Step 1 · Connect</p>
+        <h2 id="editorAuthTitle">Verify your publishing permission</h2>
+        <p>Repository owners should use a fine-grained GitHub token restricted to <strong>elvintop1/elvintop1.github.io</strong> with Contents set to Read and write. Collaborators can use any GitHub token that grants their account write access to this repository. The editor verifies push permission before opening.</p>
+        <a class="wiki-token-link" href="https://github.com/settings/personal-access-tokens/new?name=Quantum%20Wiki%20Editor&amp;description=Publish%20structured%20Quantum%20Wiki%20lessons&amp;target_name=elvintop1&amp;contents=write" target="_blank" rel="noopener noreferrer">Create a restricted token on GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+      <form id="editorAuthForm" class="wiki-auth-form">
+        <label for="githubToken">GitHub access token</label>
+        <div><input type="password" id="githubToken" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required><button type="submit" id="editorConnect">Connect</button></div>
+        <small class="wiki-token-security">Kept in memory only, cleared on disconnect or tab close, and never written to website storage.</small>
+        <p id="editorAuthStatus" class="wiki-editor-status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="wiki-editor-workspace container hidden" id="editorWorkspace" aria-label="Wiki article editor">
+      <div class="wiki-editor-topbar">
+        <div><span id="editorIdentity">Not connected</span><button type="button" id="editorDisconnect">Disconnect</button></div>
+        <label>Load a lesson<select id="existingArticle"><option value="">Create a new lesson</option></select></label>
+      </div>
+
+      <form id="wikiArticleForm" class="wiki-editor-grid">
+        <div class="wiki-editor-fields">
+          <section class="wiki-form-section">
+            <p class="content-kicker">Step 2 · Placement</p>
+            <h2>Chapter and identity</h2>
+            <div class="wiki-field-grid two">
+              <label>Chapter<select id="articleChapter" required></select></label>
+              <label>Article slug<input id="articleSlug" type="text" pattern="[a-z0-9-]+" placeholder="quantum-random-walks" required></label>
+            </div>
+            <div class="wiki-new-chapter hidden" id="newChapterFields">
+              <div class="wiki-field-grid two"><label>Chapter number<input id="chapterNumber" type="number" min="1"></label><label>Short accent<input id="chapterAccent" type="text" placeholder="Research direction"></label></div>
+              <label>Chapter title<input id="chapterTitle" type="text"></label>
+              <label>Chapter summary<textarea id="chapterSummary" rows="3"></textarea></label>
+            </div>
+          </section>
+
+          <section class="wiki-form-section">
+            <p class="content-kicker">Step 3 · Lesson</p>
+            <h2>Title and learning contract</h2>
+            <label>Lesson title<input id="articleTitle" type="text" required></label>
+            <label>Summary<textarea id="articleSummary" rows="3" required></textarea></label>
+            <div class="wiki-field-grid two"><label>Level<input id="articleLevel" type="text" value="Intermediate"></label><label>Reading time (minutes)<input id="articleMinutes" type="number" min="5" value="40"></label></div>
+            <label>Prerequisites <small>One item per line</small><textarea id="articlePrerequisites" rows="4"></textarea></label>
+            <label>Learning outcomes <small>One item per line</small><textarea id="articleOutcomes" rows="4"></textarea></label>
+          </section>
+
+          <section class="wiki-form-section">
+            <div class="wiki-form-heading"><div><p class="content-kicker">Step 4 · Main text</p><h2>Concept sections</h2></div><button type="button" class="wiki-add-row" data-add-row="sectionRows">Add section</button></div>
+            <div id="sectionRows" class="wiki-repeat-list"></div>
+          </section>
+
+          <section class="wiki-form-section">
+            <div class="wiki-form-heading"><div><p class="content-kicker">Step 5 · Mathematics</p><h2>Equations</h2></div><button type="button" class="wiki-add-row" data-add-row="equationRows">Add equation</button></div>
+            <div id="equationRows" class="wiki-repeat-list"></div>
+          </section>
+
+          <section class="wiki-form-section">
+            <p class="content-kicker">Step 6 · Guided practice</p>
+            <h2>Worked example</h2>
+            <label>Example title<input id="workedTitle" type="text"></label>
+            <label>Problem<textarea id="workedProblem" rows="3"></textarea></label>
+            <label>Steps <small>One step per line</small><textarea id="workedSteps" rows="5"></textarea></label>
+            <label>Result<textarea id="workedResult" rows="3"></textarea></label>
+          </section>
+
+          <section class="wiki-form-section">
+            <p class="content-kicker">Optional lab</p>
+            <h2>Python / Qiskit experiment</h2>
+            <label>Lab title<input id="labTitle" type="text"></label>
+            <label>Code<textarea id="labCode" class="wiki-code-input" rows="10" spellcheck="false"></textarea></label>
+          </section>
+
+          <section class="wiki-form-section">
+            <div class="wiki-form-heading"><div><p class="content-kicker">Step 7 · Assessment</p><h2>Exercises</h2></div><button type="button" class="wiki-add-row" data-add-row="exerciseRows">Add exercise</button></div>
+            <div id="exerciseRows" class="wiki-repeat-list"></div>
+          </section>
+
+          <section class="wiki-form-section">
+            <div class="wiki-form-heading"><div><p class="content-kicker">Step 8 · Evidence</p><h2>Academic sources</h2></div><button type="button" class="wiki-add-row" data-add-row="sourceRows">Add source</button></div>
+            <div id="sourceRows" class="wiki-repeat-list"></div>
+          </section>
+
+          <section class="wiki-form-section">
+            <p class="content-kicker">Step 9 · Connections</p>
+            <h2>Reading links</h2>
+            <label>Connected lesson routes <small>One route per line, for example mathematical-foundations/complex-numbers-and-phase</small><textarea id="articleConnections" rows="4"></textarea></label>
+          </section>
+
+          <div class="wiki-editor-publish">
+            <label class="wiki-publish-check"><input id="publishConfirm" type="checkbox" required><span>I reviewed the preview, equations, sources, and exercise solutions.</span></label>
+            <button type="submit" id="publishArticle">Publish lesson</button>
+            <p id="publishStatus" class="wiki-editor-status" role="status"></p>
+          </div>
+        </div>
+
+        <aside class="wiki-editor-preview" aria-label="Live lesson preview">
+          <div class="wiki-preview-sticky"><p class="content-kicker">Live preview</p><div id="articlePreview"></div></div>
+        </aside>
+      </form>
+    </section>
+  </main>
+
+  <template id="sectionRowTemplate"><article class="wiki-repeat-row" data-row-type="section"><div class="wiki-repeat-heading"><strong>Concept section</strong><button type="button" data-remove-row>Remove</button></div><label>Section title<input data-field="title" type="text" required></label><label>Explanation <small>Separate paragraphs with a blank line; use $...$ for inline mathematics.</small><textarea data-field="body" rows="8" required></textarea></label></article></template>
+  <template id="equationRowTemplate"><article class="wiki-repeat-row" data-row-type="equation"><div class="wiki-repeat-heading"><strong>Equation</strong><button type="button" data-remove-row>Remove</button></div><label>Label<input data-field="label" type="text" required></label><label>LaTeX<input data-field="latex" class="wiki-code-input" type="text" required></label><label>Meaning and conditions<textarea data-field="note" rows="3" required></textarea></label></article></template>
+  <template id="exerciseRowTemplate"><article class="wiki-repeat-row" data-row-type="exercise"><div class="wiki-repeat-heading"><strong>Exercise</strong><button type="button" data-remove-row>Remove</button></div><label>Prompt<textarea data-field="prompt" rows="3" required></textarea></label><label>Hint<textarea data-field="hint" rows="2" required></textarea></label><label>Solution<textarea data-field="answer" rows="3" required></textarea></label></article></template>
+  <template id="sourceRowTemplate"><article class="wiki-repeat-row" data-row-type="source"><div class="wiki-repeat-heading"><strong>Academic source</strong><button type="button" data-remove-row>Remove</button></div><label>Title<input data-field="title" type="text"></label><label>URL<input data-field="url" type="url" placeholder="https://…"></label><label>Why this source is useful<textarea data-field="note" rows="3"></textarea></label></article></template>
+
+  <footer class="site-footer"><div class="container footer-content"><p>&copy; 2026 Do Quang Hao. Authorized Quantum Wiki publishing workspace.</p><div class="footer-links"><a href="wiki.html">Quantum Wiki</a><a href="papers.html">Papers</a><a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></footer>
+  <script src="../js/main.js"></script>
+  <script src="../js/quantum-wiki-book-data.js"></script>
+  <script src="../js/quantum-wiki-editor.js"></script>
+  <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+</body>
+</html>

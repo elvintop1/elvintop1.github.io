@@ -38,9 +38,82 @@
         ...(item.outcomes || []),
         ...(item.sections || []).flatMap((section) => [section.title, section.body]),
         ...(item.equations || []).flatMap((equation) => [equation.label, equation.note]),
-        ...(item.exercises || []).flatMap((exercise) => [exercise.prompt, exercise.answer])
+        ...(item.exercises || []).flatMap((exercise) => [exercise.prompt, exercise.answer]),
+        ...(item.sources || []).flatMap((reference) => [reference.title, reference.note])
       ].join(' ').toLowerCase()
     })));
+  }
+
+  async function loadManagedContent() {
+    try {
+      const manifestResponse = await fetch(`../content/wiki/manifest.json?version=${Date.now()}`, { cache: 'no-store' });
+      if (!manifestResponse.ok) return;
+      const manifest = await manifestResponse.json();
+      if (!Array.isArray(manifest.articles) || manifest.articles.length === 0) return;
+
+      const documents = await Promise.all(manifest.articles.map(async (entry) => {
+        if (!entry?.path || !entry.path.startsWith('content/wiki/articles/')) return null;
+        try {
+          const response = await fetch(`../${entry.path}?version=${encodeURIComponent(entry.updatedAt || manifest.updatedAt || Date.now())}`, { cache: 'no-store' });
+          return response.ok ? response.json() : null;
+        } catch (error) {
+          return null;
+        }
+      }));
+
+      documents.filter(Boolean).forEach(mergeManagedDocument);
+      book.chapters.sort((left, right) => Number(left.number) - Number(right.number));
+    } catch (error) {
+      // The built-in textbook remains available if managed content cannot load.
+    }
+  }
+
+  function mergeManagedDocument(documentData) {
+    const chapterData = documentData?.chapter;
+    const articleData = documentData?.article;
+    if (!chapterData?.slug || !chapterData?.title || !articleData?.slug || !articleData?.title || !articleData?.summary) return;
+
+    let chapter = book.chapters.find((item) => item.slug === chapterData.slug);
+    if (!chapter) {
+      chapter = {
+        slug: chapterData.slug,
+        number: Number(chapterData.number) || book.chapters.length + 1,
+        title: chapterData.title,
+        summary: chapterData.summary || 'A managed chapter in the living quantum textbook.',
+        accent: chapterData.accent || 'Community edition',
+        references: Array.isArray(chapterData.references) ? chapterData.references : [],
+        articles: []
+      };
+      book.chapters.push(chapter);
+    } else if (Array.isArray(chapterData.references) && chapterData.references.length) {
+      chapter.references = chapterData.references;
+    }
+
+    const managedArticle = {
+      level: 'Foundational',
+      minutes: 30,
+      prerequisites: [],
+      outcomes: [],
+      sections: [],
+      equations: [],
+      worked: null,
+      lab: null,
+      exercises: [],
+      sources: [],
+      connections: [],
+      ...articleData,
+      cmsManaged: true,
+      lastUpdated: documentData.updatedAt || null
+    };
+    if (!Array.isArray(managedArticle.sections) || managedArticle.sections.length === 0) return;
+    ['prerequisites', 'outcomes', 'sections', 'equations', 'exercises', 'sources', 'connections'].forEach((key) => {
+      if (!Array.isArray(managedArticle[key])) managedArticle[key] = [];
+    });
+    managedArticle.minutes = Number.isFinite(Number(managedArticle.minutes)) ? Number(managedArticle.minutes) : 30;
+
+    const existingIndex = chapter.articles.findIndex((item) => item.slug === managedArticle.slug);
+    if (existingIndex >= 0) chapter.articles[existingIndex] = managedArticle;
+    else chapter.articles.push(managedArticle);
   }
 
   function articleByRoute(route) {
@@ -215,7 +288,7 @@
           <h1>${escapeHTML(item.title)}</h1>
           <p class="book-article-summary">${escapeHTML(item.summary)}</p>
           <div class="book-article-meta">
-            <span>${escapeHTML(item.level)}</span><span>${item.minutes} min</span><span>${item.sections.length} concept sections</span><span>${item.exercises.length} exercises</span>
+            <span>${escapeHTML(item.level)}</span><span>${item.minutes} min</span><span>${item.sections.length} concept sections</span><span>${item.exercises.length} exercises</span>${item.cmsManaged ? '<span>Web-managed page</span>' : ''}
           </div>
         </header>
 
@@ -241,7 +314,7 @@
           <section class="book-section book-concept-section" id="concept-${index + 1}">
             <p class="book-section-label">${String(index + 1).padStart(2, '0')} · Core concept</p>
             <h2>${escapeHTML(section.title)}</h2>
-            <p>${escapeHTML(section.body)}</p>
+            ${renderParagraphs(section.body)}
           </section>`).join('')}
 
         <section class="book-section" id="equations">
@@ -251,7 +324,7 @@
             ${item.equations.map((equation) => `
               <article class="book-equation-card">
                 <h3>${escapeHTML(equation.label)}</h3>
-                <div class="math-block">$$${equation.latex}$$</div>
+                <div class="math-block">$$${escapeHTML(equation.latex)}$$</div>
                 <p>${escapeHTML(equation.note)}</p>
               </article>`).join('')}
           </div>
@@ -298,8 +371,8 @@
           <h2>Sources and connected lessons</h2>
           <div class="book-source-grid">
             <div>
-              <h3>Chapter sources</h3>
-              <ul>${chapter.references.map((reference) => `<li><a href="${escapeHTML(reference.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(reference.title)} <span aria-hidden="true">↗</span></a><p>${escapeHTML(reference.note)}</p></li>`).join('')}</ul>
+              <h3>Lesson and chapter sources</h3>
+              <ul>${[...(item.sources || []), ...(chapter.references || [])].map((reference) => `<li><a href="${escapeHTML(safeExternalHref(reference.url))}" target="_blank" rel="noopener noreferrer">${escapeHTML(reference.title)} <span aria-hidden="true">↗</span></a><p>${escapeHTML(reference.note)}</p></li>`).join('') || '<li><p>No source has been attached to this lesson yet.</p></li>'}</ul>
             </div>
             <div>
               <h3>Connected pages</h3>
@@ -325,6 +398,14 @@
     setViewStatus(`Chapter ${String(chapter.number).padStart(2, '0')} · Lesson ${item.index + 1} of ${chapter.articles.length}`);
     if (window.innerWidth <= 1050) els.sidebar.classList.remove('active');
     window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function renderParagraphs(value) {
+    return String(value).split(/\n\s*\n/).map((paragraph) => `<p>${escapeHTML(paragraph).replace(/\n/g, '<br>')}</p>`).join('');
+  }
+
+  function safeExternalHref(value) {
+    return /^https?:\/\//i.test(String(value || '')) ? String(value) : '#';
   }
 
   function renderMath() {
@@ -482,7 +563,7 @@
     renderSidebar();
   }
 
-  function init() {
+  async function init() {
     els.sidebar = document.getElementById('wikiSidebar');
     els.topics = document.getElementById('wikiTopicsList');
     els.search = document.getElementById('wikiSearch');
@@ -498,6 +579,7 @@
     if (!els.sidebar || !els.topics || !els.search || !els.breadcrumb || !els.content || !els.toc) return;
 
     readLayoutPreferences();
+    await loadManagedContent();
     buildIndex();
     renderSidebar();
     handleRoute();

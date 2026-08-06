@@ -12,9 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     
     <!-- KaTeX for Math Rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+    <script defer src="../assets/vendor/katex/katex.min.js"></script>
+    <script defer src="../assets/vendor/katex/auto-render.min.js"></script>
 
     <!-- Custom CSS -->
     <link rel="icon" href="../assets/avatar.png" type="image/png">
@@ -69,9 +69,12 @@
                 </button>
             </div>
             <p id="wikiViewStatus" aria-live="polite">Textbook contents</p>
-            <button type="button" id="wikiFocusToggle" class="wiki-focus-toggle" aria-pressed="false">
-                <span aria-hidden="true">◫</span><span>Focus</span>
-            </button>
+            <div class="wiki-toolbar-actions">
+                <a class="wiki-editor-link" href="editor.html"><span aria-hidden="true">✎</span><span>Editor</span></a>
+                <button type="button" id="wikiFocusToggle" class="wiki-focus-toggle" aria-pressed="false">
+                    <span aria-hidden="true">◫</span><span>Focus</span>
+                </button>
+            </div>
         </div>
 
         <!-- Left Sidebar: Navigation & Search -->
