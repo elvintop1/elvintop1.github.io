@@ -1,4 +1,5 @@
-(function() {
+(async function() {
+  await (window.quantumManagedContentReady || Promise.resolve());
   const container = document.getElementById('researchNotePage');
   if (!container || !window.quantumResearchNotes) return;
 
@@ -60,14 +61,14 @@
 
         ${note.sections.map(section => `<section class="research-note-section" id="${escapeHtml(section.id)}"><h2>${escapeHtml(section.title)}</h2><div class="lecture-prose">${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</div>${equationMarkup(section.equations)}</section>`).join('')}
 
-        <section class="research-code-section">
+        ${note.codeLab ? `<section class="research-code-section">
           <p class="content-kicker">Reproducible experiment</p>
           <h2>${escapeHtml(note.codeLab.title)}</h2>
           <div class="lab-focus-strip"><div><span>Environment</span><strong>${escapeHtml(note.codeLab.tool)}</strong></div><div><span>Install</span><strong>${escapeHtml(note.codeLab.install)}</strong></div></div>
           <div class="code-lab-shell"><div class="code-lab-toolbar"><span>${escapeHtml(note.codeLab.tool)}</span><button class="copy-code" type="button">Copy</button></div><pre><code>${escapeHtml(note.codeLab.code)}</code></pre></div>
           <aside class="expected-result"><strong>Expected result</strong><p>${escapeHtml(note.codeLab.expected)}</p></aside>
           <div class="research-interpretation"><strong>Interpretation boundary</strong><p>${escapeHtml(note.codeLab.interpretation)}</p></div>
-        </section>
+        </section>` : ''}
 
         <section class="research-limits-grid">
           <article><p class="content-kicker">Limitations</p><h2>What this note does not establish</h2><ul>${note.limitations.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>

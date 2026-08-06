@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     <link rel="icon" href="../assets/avatar.png" type="image/png">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/quantum.css">
+    <link rel="stylesheet" href="../css/quantum.css?v=20260806-6">
 </head>
 <body>
     <a class="skip-link" href="#paperLibraryContent">Skip to paper library</a>
@@ -54,7 +54,7 @@
       <section class="paper-list-section" aria-labelledby="paper-list-title">
         <div class="section-header">
           <div><p class="content-kicker">Current reading map</p><h2 id="paper-list-title">Papers by research direction</h2></div>
-          <a class="btn-ghost" href="research.html">Research Notes &rarr;</a>
+          <div class="paper-section-actions"><a class="btn-ghost" href="editor.html?type=paper">Add or edit a paper</a><a class="btn-ghost" href="research.html">Research Notes &rarr;</a></div>
         </div>
         <div class="page-tools-heading">
           <button class="page-tools-toggle" type="button" data-tools-toggle="paperToolbar" aria-controls="paperToolbar" aria-expanded="true"><span>Search &amp; filters</span><span data-tools-state>Hide</span></button>
@@ -79,9 +79,10 @@
     </footer>
 
     <script src="../js/main.js"></script>
-    <script src="../js/quantum-research-data.js"></script>
-    <script src="../js/quantum-papers-data.js"></script>
-    <script src="../js/quantum-papers.js"></script>
+    <script src="../js/quantum-research-data.js?v=20260806-6"></script>
+    <script src="../js/quantum-papers-data.js?v=20260806-6"></script>
+    <script src="../js/quantum-managed-content.js?v=20260806-6"></script>
+    <script src="../js/quantum-papers.js?v=20260806-6"></script>
     <button id="backToTop" class="back-to-top" aria-label="Back to top">&uarr;</button>
 </body>
 </html>

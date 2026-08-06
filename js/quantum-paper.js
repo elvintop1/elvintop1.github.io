@@ -1,4 +1,5 @@
-(function() {
+(async function() {
+  await (window.quantumManagedContentReady || Promise.resolve());
   const container = document.getElementById('paperAnalysisPage');
   if (!container || !window.quantumPapers) return;
 

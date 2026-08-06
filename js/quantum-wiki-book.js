@@ -481,11 +481,9 @@
     document.body.classList.toggle('wiki-home-view', mode === 'home');
     document.body.classList.toggle('wiki-search-view', mode === 'search');
     document.body.classList.toggle('wiki-article-view', mode === 'article');
-    if (els.tocToggle) els.tocToggle.disabled = mode !== 'article';
-    if (mode !== 'article' && activeDrawer === 'toc') {
-      activeDrawer = '';
-      drawerReturnFocus = null;
-    }
+    // The right drawer is useful on every view: it contains the lesson outline
+    // in articles and contextual guidance on the contents/search screens.
+    if (els.tocToggle) els.tocToggle.disabled = false;
     applyLayoutPreferences();
   }
 
@@ -498,7 +496,7 @@
     document.body.classList.toggle('wiki-search-collapsed', layoutPreferences.searchHidden);
     document.body.classList.toggle('wiki-focus-mode', layoutPreferences.focus);
     const sidebarVisible = activeDrawer === 'contents' && !layoutPreferences.focus;
-    const tocVisible = activeDrawer === 'toc' && document.body.classList.contains('wiki-article-view') && !layoutPreferences.focus;
+    const tocVisible = activeDrawer === 'toc' && !layoutPreferences.focus;
     const drawerVisible = sidebarVisible || tocVisible;
 
     els.sidebar.classList.toggle('active', sidebarVisible);

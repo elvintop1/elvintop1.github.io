@@ -1,4 +1,5 @@
-(function() {
+(async function() {
+  await (window.quantumManagedContentReady || Promise.resolve());
   const papers = window.quantumPapers || [];
   const tracks = window.quantumResearchTracks || [];
   const list = document.getElementById('paperList');

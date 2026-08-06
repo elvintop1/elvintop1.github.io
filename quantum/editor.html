@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wiki Editor | Do Quang Hao</title>
-  <meta name="description" content="Authorized editor for the Quantum Computing Textbook.">
+  <title>Quantum Content Studio | Do Quang Hao</title>
+  <meta name="description" content="Authorized editor for quantum Wiki lessons, research notes, and paper analyses.">
   <meta name="robots" content="noindex,nofollow">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src https://api.github.com; img-src 'self' data:; base-uri 'self'; form-action 'self'">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
   <script defer src="../assets/vendor/katex/auto-render.min.js"></script>
   <link rel="icon" href="../assets/avatar.png" type="image/png">
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/quantum.css">
+  <link rel="stylesheet" href="../css/quantum.css?v=20260806-6">
 </head>
 <body class="wiki-editor-body">
   <nav class="navbar" id="navbar">
@@ -35,8 +35,8 @@
   <main class="wiki-editor-page">
     <header class="wiki-editor-hero container">
       <p class="content-kicker">Authorized publishing workspace</p>
-      <h1>Quantum Wiki Editor</h1>
-      <p>Create or revise textbook lessons through a structured form. Published content is versioned in GitHub and appears in the Wiki after GitHub Pages finishes updating.</p>
+      <h1>Quantum Content Studio</h1>
+      <p>Create or revise Wiki lessons, research notes, and paper analyses through structured forms. Published content is versioned in GitHub and appears after GitHub Pages finishes updating.</p>
     </header>
 
     <section class="wiki-editor-auth container" id="editorAuth" aria-labelledby="editorAuthTitle">
@@ -44,7 +44,7 @@
         <p class="content-kicker">Step 1 · Connect</p>
         <h2 id="editorAuthTitle">Verify your publishing permission</h2>
         <p>Repository owners should use a fine-grained GitHub token restricted to <strong>elvintop1/elvintop1.github.io</strong> with Contents set to Read and write. Collaborators can use any GitHub token that grants their account write access to this repository. The editor verifies push permission before opening.</p>
-        <a class="wiki-token-link" href="https://github.com/settings/personal-access-tokens/new?name=Quantum%20Wiki%20Editor&amp;description=Publish%20structured%20Quantum%20Wiki%20lessons&amp;target_name=elvintop1&amp;contents=write" target="_blank" rel="noopener noreferrer">Create a restricted token on GitHub <span aria-hidden="true">↗</span></a>
+        <a class="wiki-token-link" href="https://github.com/settings/personal-access-tokens/new?name=Quantum%20Content%20Studio&amp;description=Publish%20Quantum%20Wiki%2C%20Research%2C%20and%20Paper%20content&amp;target_name=elvintop1&amp;contents=write" target="_blank" rel="noopener noreferrer">Create a restricted token on GitHub <span aria-hidden="true">↗</span></a>
       </div>
       <form id="editorAuthForm" class="wiki-auth-form">
         <label for="githubToken">GitHub access token</label>
@@ -54,13 +54,19 @@
       </form>
     </section>
 
-    <section class="wiki-editor-workspace container hidden" id="editorWorkspace" aria-label="Wiki article editor">
+    <section class="wiki-editor-workspace container hidden" id="editorWorkspace" aria-label="Quantum content editor">
       <div class="wiki-editor-topbar">
         <div><span id="editorIdentity">Not connected</span><button type="button" id="editorDisconnect">Disconnect</button></div>
-        <label>Load a lesson<select id="existingArticle"><option value="">Create a new lesson</option></select></label>
+        <div class="wiki-editor-mode-tabs" role="tablist" aria-label="Content type">
+          <button type="button" role="tab" aria-selected="true" data-editor-mode="wiki">Wiki lesson</button>
+          <button type="button" role="tab" aria-selected="false" data-editor-mode="research">Research note</button>
+          <button type="button" role="tab" aria-selected="false" data-editor-mode="paper">Paper analysis</button>
+        </div>
       </div>
 
-      <form id="wikiArticleForm" class="wiki-editor-grid">
+      <div id="wikiEditorPanel" class="content-editor-panel" data-editor-panel="wiki">
+        <label class="wiki-editor-document-picker">Load a lesson<select id="existingArticle"><option value="">Create a new lesson</option></select></label>
+        <form id="wikiArticleForm" class="wiki-editor-grid">
         <div class="wiki-editor-fields">
           <section class="wiki-form-section">
             <p class="content-kicker">Step 2 · Placement</p>
@@ -100,9 +106,9 @@
             <p class="content-kicker">Step 6 · Guided practice</p>
             <h2>Worked example</h2>
             <label>Example title<input id="workedTitle" type="text"></label>
-            <label>Problem<textarea id="workedProblem" rows="3"></textarea></label>
-            <label>Steps <small>One step per line</small><textarea id="workedSteps" rows="5"></textarea></label>
-            <label>Result<textarea id="workedResult" rows="3"></textarea></label>
+            <label>Problem <small>Use $...$ for inline mathematics.</small><textarea id="workedProblem" rows="3"></textarea></label>
+            <label>Steps <small>One step per line; use $...$ for mathematics.</small><textarea id="workedSteps" rows="5"></textarea></label>
+            <label>Result <small>Use $...$ for inline mathematics.</small><textarea id="workedResult" rows="3"></textarea></label>
           </section>
 
           <section class="wiki-form-section">
@@ -138,7 +144,103 @@
         <aside class="wiki-editor-preview" aria-label="Live lesson preview">
           <div class="wiki-preview-sticky"><p class="content-kicker">Live preview</p><div id="articlePreview"></div></div>
         </aside>
-      </form>
+        </form>
+      </div>
+
+      <div id="researchEditorPanel" class="content-editor-panel hidden" data-editor-panel="research">
+        <label class="wiki-editor-document-picker">Load a research note<select id="existingResearch"><option value="">Create a new research note</option></select></label>
+        <form id="researchNoteForm" class="wiki-editor-grid">
+          <div class="wiki-editor-fields">
+            <section class="wiki-form-section">
+              <p class="content-kicker">Identity</p><h2>Direction and publication record</h2>
+              <div class="wiki-field-grid two"><label>Research direction<select id="researchTrack" required></select></label><label>Slug<input id="researchSlug" type="text" pattern="[a-z0-9-]+" required></label></div>
+              <div class="wiki-field-grid two"><label>Research date<input id="researchDate" type="date" required></label><label>Status<input id="researchStatus" type="text" value="Exploration"></label></div>
+              <div class="wiki-field-grid two"><label>Maturity<input id="researchMaturity" type="text" value="Working note"></label><label>Reading time (minutes)<input id="researchMinutes" type="number" min="5" value="15"></label></div>
+            </section>
+            <section class="wiki-form-section">
+              <p class="content-kicker">Orientation</p><h2>Question and abstract</h2>
+              <label>Title<input id="researchTitle" type="text" required></label>
+              <label>Subtitle<textarea id="researchSubtitle" rows="3" required></textarea></label>
+              <label>Research question<textarea id="researchQuestion" rows="3" required></textarea></label>
+              <label>Abstract in your own words<textarea id="researchAbstract" rows="6" required></textarea></label>
+              <label>Tags <small>One per line</small><textarea id="researchTags" rows="4"></textarea></label>
+              <label>Prerequisites <small>One per line</small><textarea id="researchPrerequisites" rows="4"></textarea></label>
+              <label>Current findings <small>One per line; use $...$ for math.</small><textarea id="researchFindings" rows="7"></textarea></label>
+            </section>
+            <section class="wiki-form-section">
+              <p class="content-kicker">Long-form analysis</p><h2>Sections and equations</h2>
+              <label>Sections <small>Start each section with “## Title”; separate paragraphs with blank lines. Use $...$ for math.</small><textarea id="researchSections" rows="18" required></textarea></label>
+              <label>Equations <small>One per line: Section number | Label | LaTeX | Meaning</small><textarea id="researchEquations" class="wiki-code-input" rows="6"></textarea></label>
+            </section>
+            <section class="wiki-form-section">
+              <p class="content-kicker">Reproducible experiment</p><h2>Python / Qiskit lab</h2>
+              <label>Lab title<input id="researchLabTitle" type="text"></label>
+              <div class="wiki-field-grid two"><label>Environment<input id="researchLabTool" type="text" value="Python + Qiskit"></label><label>Install command<input id="researchLabInstall" class="wiki-code-input" type="text" value="python -m pip install qiskit"></label></div>
+              <label>Code<textarea id="researchLabCode" class="wiki-code-input" rows="14" spellcheck="false"></textarea></label>
+              <label>Expected result<textarea id="researchLabExpected" rows="3"></textarea></label>
+              <label>Interpretation boundary<textarea id="researchLabInterpretation" rows="4"></textarea></label>
+            </section>
+            <section class="wiki-form-section">
+              <p class="content-kicker">Critical record</p><h2>Limits, questions, and sources</h2>
+              <label>Limitations <small>One per line</small><textarea id="researchLimitations" rows="5"></textarea></label>
+              <label>Open questions <small>One per line</small><textarea id="researchOpenQuestions" rows="5"></textarea></label>
+              <label>Connected pages <small>One per line: Label | relative URL</small><textarea id="researchConnections" rows="4"></textarea></label>
+              <label>Sources <small>One per line: Type | Title | URL</small><textarea id="researchSources" rows="6"></textarea></label>
+            </section>
+            <div class="wiki-editor-publish">
+              <label class="wiki-publish-check"><input id="researchConfirm" type="checkbox" required><span>I reviewed the claims, equations, code, limitations, and sources.</span></label>
+              <button type="submit" id="publishResearch">Publish research note</button><p id="researchPublishStatus" class="wiki-editor-status" role="status"></p>
+            </div>
+          </div>
+          <aside class="wiki-editor-preview"><div class="wiki-preview-sticky"><p class="content-kicker">Live preview</p><div id="researchPreview"></div></div></aside>
+        </form>
+      </div>
+
+      <div id="paperEditorPanel" class="content-editor-panel hidden" data-editor-panel="paper">
+        <label class="wiki-editor-document-picker">Load a paper analysis<select id="existingPaper"><option value="">Create a new paper analysis</option></select></label>
+        <form id="paperAnalysisForm" class="wiki-editor-grid">
+          <div class="wiki-editor-fields">
+            <section class="wiki-form-section">
+              <p class="content-kicker">Bibliographic record</p><h2>Paper identity</h2>
+              <div class="wiki-field-grid two"><label>Research direction<select id="paperTrack" required></select></label><label>Slug<input id="paperSlug" type="text" pattern="[a-z0-9-]+" required></label></div>
+              <label>Full title<input id="paperTitle" type="text" required></label><label>Short title<input id="paperShortTitle" type="text" required></label>
+              <label>Authors <small>One per line</small><textarea id="paperAuthors" rows="4" required></textarea></label>
+              <div class="wiki-field-grid two"><label>Year<input id="paperYear" type="number" min="1900" max="2100" required></label><label>Venue<input id="paperVenue" type="text" required></label></div>
+              <div class="wiki-field-grid two"><label>arXiv ID<input id="paperArxiv" type="text"></label><label>DOI<input id="paperDoi" type="text"></label></div>
+              <div class="wiki-field-grid two"><label>Source URL<input id="paperSourceUrl" type="url" required></label><label>PDF URL<input id="paperPdfUrl" type="url"></label></div>
+              <div class="wiki-field-grid two"><label>Reading status<input id="paperStatus" type="text" value="Analysis draft"></label><label>Reading date<input id="paperReadingDate" type="date" required></label></div>
+              <div class="wiki-field-grid two"><label>Reading time (minutes)<input id="paperMinutes" type="number" min="5" value="15"></label><label>Tags <small>One per line</small><textarea id="paperTags" rows="3"></textarea></label></div>
+              <label>Citation<textarea id="paperCitation" rows="3"></textarea></label>
+            </section>
+            <section class="wiki-form-section">
+              <p class="content-kicker">Reading orientation</p><h2>Your reconstruction</h2>
+              <label>Abstract in your own words<textarea id="paperAbstract" rows="5" required></textarea></label>
+              <label>Why you are reading it<textarea id="paperWhy" rows="4" required></textarea></label>
+              <label>Reading question<textarea id="paperQuestion" rows="3" required></textarea></label>
+              <label>Current thesis<textarea id="paperThesis" rows="4" required></textarea></label>
+              <label>Main contributions <small>One per line</small><textarea id="paperContributions" rows="7"></textarea></label>
+            </section>
+            <section class="wiki-form-section">
+              <p class="content-kicker">Deep reading</p><h2>Mathematics and analysis</h2>
+              <label>Equations <small>One per line: Label | LaTeX | Meaning</small><textarea id="paperEquations" class="wiki-code-input" rows="7"></textarea></label>
+              <label>Analysis sections <small>Start each section with “## Title”; separate paragraphs with blank lines. Use $...$ for math.</small><textarea id="paperSections" rows="18" required></textarea></label>
+              <label>Personal comments <small>One per line: Label | Comment title | Your comment</small><textarea id="paperComments" rows="7"></textarea></label>
+            </section>
+            <section class="wiki-form-section">
+              <p class="content-kicker">Critical reading</p><h2>Boundaries and connections</h2>
+              <label>Strengths <small>One per line</small><textarea id="paperStrengths" rows="5"></textarea></label>
+              <label>Limitations <small>One per line</small><textarea id="paperLimitations" rows="5"></textarea></label>
+              <label>Questions to carry forward <small>One per line</small><textarea id="paperQuestions" rows="5"></textarea></label>
+              <label>Connected pages <small>One per line: Label | relative URL</small><textarea id="paperConnections" rows="5"></textarea></label>
+            </section>
+            <div class="wiki-editor-publish">
+              <label class="wiki-publish-check"><input id="paperConfirm" type="checkbox" required><span>I checked the citation, reconstructed argument, equations, comments, and claim boundaries.</span></label>
+              <button type="submit" id="publishPaper">Publish paper analysis</button><p id="paperPublishStatus" class="wiki-editor-status" role="status"></p>
+            </div>
+          </div>
+          <aside class="wiki-editor-preview"><div class="wiki-preview-sticky"><p class="content-kicker">Live preview</p><div id="paperPreview"></div></div></aside>
+        </form>
+      </div>
     </section>
   </main>
 
@@ -147,10 +249,12 @@
   <template id="exerciseRowTemplate"><article class="wiki-repeat-row" data-row-type="exercise"><div class="wiki-repeat-heading"><strong>Exercise</strong><button type="button" data-remove-row>Remove</button></div><label>Prompt<textarea data-field="prompt" rows="3" required></textarea></label><label>Hint<textarea data-field="hint" rows="2" required></textarea></label><label>Solution<textarea data-field="answer" rows="3" required></textarea></label></article></template>
   <template id="sourceRowTemplate"><article class="wiki-repeat-row" data-row-type="source"><div class="wiki-repeat-heading"><strong>Academic source</strong><button type="button" data-remove-row>Remove</button></div><label>Title<input data-field="title" type="text"></label><label>URL<input data-field="url" type="url" placeholder="https://…"></label><label>Why this source is useful<textarea data-field="note" rows="3"></textarea></label></article></template>
 
-  <footer class="site-footer"><div class="container footer-content"><p>&copy; 2026 Do Quang Hao. Authorized Quantum Wiki publishing workspace.</p><div class="footer-links"><a href="wiki.html">Quantum Wiki</a><a href="papers.html">Papers</a><a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></footer>
+  <footer class="site-footer"><div class="container footer-content"><p>&copy; 2026 Do Quang Hao. Authorized quantum publishing workspace.</p><div class="footer-links"><a href="wiki.html">Quantum Wiki</a><a href="research.html">Research</a><a href="papers.html">Papers</a><a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></footer>
   <script src="../js/main.js"></script>
-  <script src="../js/quantum-wiki-book-data.js"></script>
-  <script src="../js/quantum-wiki-editor.js"></script>
+  <script src="../js/quantum-wiki-book-data.js?v=20260806-6"></script>
+  <script src="../js/quantum-research-data.js?v=20260806-6"></script>
+  <script src="../js/quantum-papers-data.js?v=20260806-6"></script>
+  <script src="../js/quantum-wiki-editor.js?v=20260806-6"></script>
   <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
 </body>
 </html>

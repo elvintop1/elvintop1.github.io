@@ -1,4 +1,5 @@
-(function() {
+(async function() {
+  await (window.quantumManagedContentReady || Promise.resolve());
   const notes = window.quantumResearchNotes || [];
   const tracks = window.quantumResearchTracks || [];
   const trackGrid = document.getElementById('researchTrackGrid');

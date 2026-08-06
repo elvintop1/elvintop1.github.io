@@ -59,7 +59,7 @@
               { label: 'Polar form', latex: 'z=a+ib=re^{i\\theta},\\quad r=\\sqrt{a^2+b^2}', note: 'Use atan2(b,a) to place the angle in the correct quadrant.' },
               { label: 'Born conversion', latex: 'p=|\\alpha|^2=\\alpha^*\\alpha', note: 'Normalization ensures the probabilities sum to one.' }
             ],
-            worked: { title: 'Normalize two amplitudes', problem: 'Let the unnormalized amplitudes be 1+i and 1. Find the normalized state and the probability of outcome 0.', steps: ['Compute squared magnitudes: |1+i|²=2 and |1|²=1.', 'The norm is √3, so divide both amplitudes by √3.', 'The probability of 0 is |(1+i)/√3|²=2/3.'], result: '|ψ⟩=((1+i)|0⟩+|1⟩)/√3 and p(0)=2/3.' },
+            worked: { title: 'Normalize two amplitudes', problem: 'Let the unnormalized amplitudes be $1+i$ and $1$. Find the normalized state and the probability of outcome $0$.', steps: ['Compute squared magnitudes: $|1+i|^2=2$ and $|1|^2=1$.', 'The norm is $\\sqrt{3}$, so divide both amplitudes by $\\sqrt{3}$.', 'The probability of $0$ is $|(1+i)/\\sqrt{3}|^2=2/3$.'], result: '$|\\psi\\rangle=((1+i)|0\\rangle+|1\\rangle)/\\sqrt{3}$ and $p(0)=2/3$.' },
             lab: { title: 'Inspect phase with Qiskit', code: "from qiskit import QuantumCircuit\nfrom qiskit.quantum_info import Statevector\n\nqc = QuantumCircuit(1)\nqc.h(0)\nqc.z(0)\nprint(Statevector.from_instruction(qc))\n# Compare with H|0>: probabilities match, phase does not." },
             exercises: [
               { prompt: 'Convert −1+i√3 to polar form.', hint: 'Its magnitude is 2 and it lies in quadrant II.', answer: '2e^{i2π/3}.' },
