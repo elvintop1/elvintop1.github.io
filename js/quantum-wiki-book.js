@@ -8,11 +8,11 @@
   let flatArticles = [];
   const preferenceKey = 'quantum-wiki-layout-v2';
   let layoutPreferences = {
-    sidebarHidden: false,
     searchHidden: true,
-    tocHidden: false,
     focus: false
   };
+  let activeDrawer = '';
+  let drawerReturnFocus = null;
 
   const escapeHTML = (value = '') => String(value)
     .replace(/&/g, '&amp;')
@@ -461,7 +461,7 @@
   function readLayoutPreferences() {
     try {
       const saved = JSON.parse(localStorage.getItem(preferenceKey));
-      if (saved && typeof saved === 'object') layoutPreferences = { ...layoutPreferences, ...saved, focus: false };
+      if (saved && typeof saved.searchHidden === 'boolean') layoutPreferences.searchHidden = saved.searchHidden;
     } catch (error) {
       // Local preferences are optional; the default reading layout remains usable.
     }
@@ -470,17 +470,11 @@
   function saveLayoutPreferences() {
     try {
       localStorage.setItem(preferenceKey, JSON.stringify({
-        sidebarHidden: layoutPreferences.sidebarHidden,
-        searchHidden: layoutPreferences.searchHidden,
-        tocHidden: layoutPreferences.tocHidden
+        searchHidden: layoutPreferences.searchHidden
       }));
     } catch (error) {
       // Ignore storage restrictions in private browsing contexts.
     }
-  }
-
-  function isCompactLayout() {
-    return window.matchMedia('(max-width: 1050px)').matches;
   }
 
   function setViewMode(mode) {
@@ -488,6 +482,10 @@
     document.body.classList.toggle('wiki-search-view', mode === 'search');
     document.body.classList.toggle('wiki-article-view', mode === 'article');
     if (els.tocToggle) els.tocToggle.disabled = mode !== 'article';
+    if (mode !== 'article' && activeDrawer === 'toc') {
+      activeDrawer = '';
+      drawerReturnFocus = null;
+    }
     applyLayoutPreferences();
   }
 
@@ -496,22 +494,32 @@
   }
 
   function applyLayoutPreferences() {
-    document.body.classList.toggle('wiki-sidebar-collapsed', layoutPreferences.sidebarHidden && !isCompactLayout());
+    document.body.classList.remove('wiki-sidebar-collapsed', 'wiki-toc-collapsed');
     document.body.classList.toggle('wiki-search-collapsed', layoutPreferences.searchHidden);
-    document.body.classList.toggle('wiki-toc-collapsed', layoutPreferences.tocHidden);
     document.body.classList.toggle('wiki-focus-mode', layoutPreferences.focus);
+    const sidebarVisible = activeDrawer === 'contents' && !layoutPreferences.focus;
+    const tocVisible = activeDrawer === 'toc' && document.body.classList.contains('wiki-article-view') && !layoutPreferences.focus;
+    const drawerVisible = sidebarVisible || tocVisible;
+
+    els.sidebar.classList.toggle('active', sidebarVisible);
+    els.sidebar.setAttribute('aria-hidden', String(!sidebarVisible));
+    els.sidebar.inert = !sidebarVisible;
+    els.tocPanel.classList.toggle('active', tocVisible);
+    els.tocPanel.setAttribute('aria-hidden', String(!tocVisible));
+    els.tocPanel.inert = !tocVisible;
+    els.drawerBackdrop.hidden = !drawerVisible;
+    document.body.classList.toggle('wiki-drawer-open', drawerVisible);
 
     if (els.sidebarToggle) {
-      const sidebarVisible = isCompactLayout() ? els.sidebar.classList.contains('active') : !layoutPreferences.sidebarHidden;
       els.sidebarToggle.setAttribute('aria-expanded', String(sidebarVisible));
       els.sidebarToggle.classList.toggle('is-active', sidebarVisible);
     }
     if (els.searchToggle) {
-      els.searchToggle.setAttribute('aria-expanded', String(!layoutPreferences.searchHidden));
-      els.searchToggle.classList.toggle('is-active', !layoutPreferences.searchHidden);
+      const searchVisible = sidebarVisible && !layoutPreferences.searchHidden;
+      els.searchToggle.setAttribute('aria-expanded', String(searchVisible));
+      els.searchToggle.classList.toggle('is-active', searchVisible);
     }
     if (els.tocToggle) {
-      const tocVisible = !layoutPreferences.tocHidden && document.body.classList.contains('wiki-article-view');
       els.tocToggle.setAttribute('aria-expanded', String(tocVisible));
       els.tocToggle.classList.toggle('is-active', tocVisible);
     }
@@ -522,22 +530,53 @@
     }
   }
 
-  function toggleSidebar() {
-    if (isCompactLayout()) {
-      els.sidebar.classList.toggle('active');
-    } else {
-      layoutPreferences.sidebarHidden = !layoutPreferences.sidebarHidden;
-      saveLayoutPreferences();
+  function toggleDrawer(name, trigger) {
+    if (layoutPreferences.focus) layoutPreferences.focus = false;
+    if (activeDrawer === name) {
+      closeDrawers();
+      return;
     }
+    activeDrawer = name;
+    drawerReturnFocus = trigger || null;
     applyLayoutPreferences();
+    const closeButton = name === 'contents' ? els.sidebarClose : els.tocClose;
+    window.requestAnimationFrame(() => closeButton?.focus());
+  }
+
+  function closeDrawers(restoreFocus = true) {
+    if (!activeDrawer) return;
+    activeDrawer = '';
+    applyLayoutPreferences();
+    if (restoreFocus) drawerReturnFocus?.focus();
+    drawerReturnFocus = null;
+  }
+
+  function trapDrawerFocus(event) {
+    if (event.key !== 'Tab' || !activeDrawer) return;
+    const panel = activeDrawer === 'contents' ? els.sidebar : els.tocPanel;
+    const focusable = [...panel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+      .filter((element) => element.getClientRects().length > 0);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function toggleSidebar() {
+    toggleDrawer('contents', els.sidebarToggle);
   }
 
   function showSearch() {
     layoutPreferences.searchHidden = false;
-    if (!isCompactLayout()) layoutPreferences.sidebarHidden = false;
-    else els.sidebar.classList.add('active');
     saveLayoutPreferences();
-    applyLayoutPreferences();
+    if (activeDrawer !== 'contents') toggleDrawer('contents', els.searchToggle);
+    else applyLayoutPreferences();
     window.requestAnimationFrame(() => els.search.focus());
   }
 
@@ -570,13 +609,17 @@
     els.breadcrumb = document.getElementById('wikiBreadcrumb');
     els.content = document.getElementById('wikiTopicContent');
     els.toc = document.getElementById('tocNav');
+    els.tocPanel = document.getElementById('wikiToc');
     els.sidebarToggle = document.getElementById('wikiSidebarToggle');
+    els.sidebarClose = document.getElementById('wikiSidebarClose');
     els.searchToggle = document.getElementById('wikiSearchToggle');
     els.searchClose = document.getElementById('wikiSearchClose');
     els.tocToggle = document.getElementById('wikiTocToggle');
+    els.tocClose = document.getElementById('wikiTocClose');
+    els.drawerBackdrop = document.getElementById('wikiDrawerBackdrop');
     els.focusToggle = document.getElementById('wikiFocusToggle');
     els.viewStatus = document.getElementById('wikiViewStatus');
-    if (!els.sidebar || !els.topics || !els.search || !els.breadcrumb || !els.content || !els.toc) return;
+    if (!els.sidebar || !els.topics || !els.search || !els.breadcrumb || !els.content || !els.toc || !els.tocPanel || !els.drawerBackdrop) return;
 
     readLayoutPreferences();
     await loadManagedContent();
@@ -587,6 +630,7 @@
 
     window.addEventListener('hashchange', () => {
       els.search.value = '';
+      closeDrawers(false);
       handleRoute();
     });
     els.search.addEventListener('input', () => {
@@ -598,25 +642,22 @@
 
     els.sidebarToggle?.addEventListener('click', toggleSidebar);
     els.searchToggle?.addEventListener('click', () => {
-      if (layoutPreferences.searchHidden) showSearch();
+      if (activeDrawer !== 'contents' || layoutPreferences.searchHidden) showSearch();
       else hideSearch();
     });
     els.searchClose?.addEventListener('click', hideSearch);
-    els.tocToggle?.addEventListener('click', () => {
-      layoutPreferences.tocHidden = !layoutPreferences.tocHidden;
-      saveLayoutPreferences();
-      applyLayoutPreferences();
-    });
+    els.sidebarClose?.addEventListener('click', closeDrawers);
+    els.tocClose?.addEventListener('click', closeDrawers);
+    els.drawerBackdrop?.addEventListener('click', closeDrawers);
+    els.tocToggle?.addEventListener('click', () => toggleDrawer('toc', els.tocToggle));
     els.focusToggle?.addEventListener('click', () => {
+      closeDrawers(false);
       layoutPreferences.focus = !layoutPreferences.focus;
       applyLayoutPreferences();
     });
-    window.addEventListener('resize', applyLayoutPreferences);
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && els.sidebar.classList.contains('active')) {
-        els.sidebar.classList.remove('active');
-        applyLayoutPreferences();
-      }
+      if (event.key === 'Escape' && activeDrawer) closeDrawers();
+      trapDrawerFocus(event);
       if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName || '')) {
         event.preventDefault();
         showSearch();

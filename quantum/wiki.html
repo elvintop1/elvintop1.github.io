@@ -58,13 +58,13 @@
     <div class="wiki-layout container">
         <div class="wiki-reader-toolbar" role="toolbar" aria-label="Reading layout controls">
             <div class="wiki-reader-toolbar-group">
-                <button type="button" id="wikiSidebarToggle" aria-controls="wikiSidebar" aria-expanded="true">
+                <button type="button" id="wikiSidebarToggle" aria-controls="wikiSidebar" aria-expanded="false">
                     <span aria-hidden="true">☰</span><span>Contents</span>
                 </button>
                 <button type="button" id="wikiSearchToggle" aria-controls="wikiSearchPanel" aria-expanded="false">
                     <span aria-hidden="true">⌕</span><span>Search</span>
                 </button>
-                <button type="button" id="wikiTocToggle" aria-controls="wikiToc" aria-expanded="true">
+                <button type="button" id="wikiTocToggle" aria-controls="wikiToc" aria-expanded="false">
                     <span aria-hidden="true">≡</span><span>On this page</span>
                 </button>
             </div>
@@ -77,8 +77,14 @@
             </div>
         </div>
 
+        <button type="button" class="wiki-drawer-backdrop" id="wikiDrawerBackdrop" aria-label="Close side panel" hidden></button>
+
         <!-- Left Sidebar: Navigation & Search -->
-        <aside class="wiki-sidebar" id="wikiSidebar">
+        <aside class="wiki-sidebar" id="wikiSidebar" role="dialog" aria-modal="true" aria-labelledby="wikiSidebarTitle" aria-hidden="true" inert>
+            <div class="wiki-drawer-heading">
+                <div><span>Quantum textbook</span><strong id="wikiSidebarTitle">Contents</strong></div>
+                <button type="button" id="wikiSidebarClose" aria-label="Close contents panel">×</button>
+            </div>
             <div class="wiki-search-box" id="wikiSearchPanel">
                 <div class="wiki-search-heading">
                     <label for="wikiSearch">Search the full book</label>
@@ -105,7 +111,11 @@
         </main>
 
         <!-- Right Sidebar: Table of Contents -->
-        <aside class="wiki-toc" id="wikiToc">
+        <aside class="wiki-toc" id="wikiToc" role="dialog" aria-modal="true" aria-labelledby="wikiTocTitle" aria-hidden="true" inert>
+            <div class="wiki-drawer-heading">
+                <div><span>Current lesson</span><strong id="wikiTocTitle">On this page</strong></div>
+                <button type="button" id="wikiTocClose" aria-label="Close lesson outline">×</button>
+            </div>
             <div class="toc-sticky-container">
                 <nav id="tocNav" aria-label="Table of contents">
                     <p class="toc-empty-msg">Open a lesson to view its contents.</p>
