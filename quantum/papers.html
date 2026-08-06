@@ -56,7 +56,10 @@
           <div><p class="content-kicker">Current reading map</p><h2 id="paper-list-title">Papers by research direction</h2></div>
           <a class="btn-ghost" href="research.html">Research Notes &rarr;</a>
         </div>
-        <div class="paper-toolbar">
+        <div class="page-tools-heading">
+          <button class="page-tools-toggle" type="button" data-tools-toggle="paperToolbar" aria-controls="paperToolbar" aria-expanded="true"><span>Search &amp; filters</span><span data-tools-state>Hide</span></button>
+        </div>
+        <div class="paper-toolbar collapsible-tools" id="paperToolbar">
           <label class="paper-search"><span class="sr-only">Search papers</span><input type="search" id="paperSearch" placeholder="Search title, author, idea, or tag..."></label>
           <label><span class="sr-only">Filter by direction</span><select id="paperTrackFilter"><option value="all">All directions</option></select></label>
           <label><span class="sr-only">Filter by reading status</span><select id="paperStatusFilter"><option value="all">All reading statuses</option></select></label>

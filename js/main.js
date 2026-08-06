@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
   const backToTop = document.getElementById('backToTop');
+  const toolToggles = document.querySelectorAll('[data-tools-toggle]');
 
   function closeMenu() {
     navLinks?.classList.remove('active');
@@ -61,4 +62,35 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', updateBackToTop, { passive: true });
     backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
+
+  toolToggles.forEach((button) => {
+    const panel = document.getElementById(button.dataset.toolsToggle);
+    if (!panel) return;
+    const storageKey = `page-tools:${button.dataset.toolsToggle}`;
+    let collapsed = window.matchMedia('(max-width: 760px)').matches;
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved !== null) collapsed = saved === 'collapsed';
+    } catch (error) {
+      // The control works without persistence when browser storage is unavailable.
+    }
+
+    const update = () => {
+      panel.classList.toggle('is-collapsed', collapsed);
+      button.setAttribute('aria-expanded', String(!collapsed));
+      const state = button.querySelector('[data-tools-state]');
+      if (state) state.textContent = collapsed ? 'Show' : 'Hide';
+    };
+
+    button.addEventListener('click', () => {
+      collapsed = !collapsed;
+      update();
+      try {
+        localStorage.setItem(storageKey, collapsed ? 'collapsed' : 'expanded');
+      } catch (error) {
+        // Persistence is optional.
+      }
+    });
+    update();
+  });
 });

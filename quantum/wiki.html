@@ -56,16 +56,31 @@
 
     <!-- Main Textbook Layout -->
     <div class="wiki-layout container">
-        
-        <!-- Mobile Sidebar Toggle -->
-        <button class="mobile-sidebar-toggle" id="wikiSidebarToggle" aria-label="Toggle Wiki Menu">
-            Contents &amp; search
-        </button>
+        <div class="wiki-reader-toolbar" role="toolbar" aria-label="Reading layout controls">
+            <div class="wiki-reader-toolbar-group">
+                <button type="button" id="wikiSidebarToggle" aria-controls="wikiSidebar" aria-expanded="true">
+                    <span aria-hidden="true">☰</span><span>Contents</span>
+                </button>
+                <button type="button" id="wikiSearchToggle" aria-controls="wikiSearchPanel" aria-expanded="false">
+                    <span aria-hidden="true">⌕</span><span>Search</span>
+                </button>
+                <button type="button" id="wikiTocToggle" aria-controls="wikiToc" aria-expanded="true">
+                    <span aria-hidden="true">≡</span><span>On this page</span>
+                </button>
+            </div>
+            <p id="wikiViewStatus" aria-live="polite">Textbook contents</p>
+            <button type="button" id="wikiFocusToggle" class="wiki-focus-toggle" aria-pressed="false">
+                <span aria-hidden="true">◫</span><span>Focus</span>
+            </button>
+        </div>
 
         <!-- Left Sidebar: Navigation & Search -->
         <aside class="wiki-sidebar" id="wikiSidebar">
-            <div class="wiki-search-box">
-                <label for="wikiSearch">Search the full book</label>
+            <div class="wiki-search-box" id="wikiSearchPanel">
+                <div class="wiki-search-heading">
+                    <label for="wikiSearch">Search the full book</label>
+                    <button type="button" id="wikiSearchClose" aria-label="Hide search">Hide</button>
+                </div>
                 <input type="search" id="wikiSearch" placeholder="Try “phase”, “noise”, “HHL”..." aria-label="Search the full textbook">
             </div>
             

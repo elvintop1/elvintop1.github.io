@@ -2312,6 +2312,10 @@ body.modal-open {
   padding-bottom: 90px;
 }
 
+.navbar {
+  transition: transform 180ms ease;
+}
+
 .wiki-sidebar,
 .wiki-toc {
   top: 102px;
@@ -5706,4 +5710,399 @@ body.modal-open {
     flex-direction: column;
     gap: 7px;
   }
+}
+
+/* ================================================================
+   QUANTUM WIKI · READING LAYOUT V2
+   Collapsible rails, balanced type, and a stable reading measure.
+   ================================================================ */
+
+.wiki-layout.container {
+  max-width: 1540px;
+  grid-template-columns: 260px minmax(0, 1fr) 210px;
+  column-gap: clamp(24px, 2.2vw, 38px);
+  row-gap: 26px;
+  padding-top: 24px;
+}
+
+.wiki-reader-toolbar {
+  position: sticky;
+  z-index: 40;
+  top: 82px;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 48px;
+  padding: 5px 7px;
+  color: #596579;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #dfe4ec;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(23, 32, 51, 0.06);
+  backdrop-filter: blur(12px);
+}
+
+.wiki-reader-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.wiki-reader-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 11px;
+  color: #667085;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  font: 600 0.68rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+.wiki-reader-toolbar button:hover,
+.wiki-reader-toolbar button.is-active {
+  color: #1746b0;
+  background: #edf3ff;
+}
+
+.wiki-reader-toolbar button:focus-visible {
+  outline: 2px solid #6f91e8;
+  outline-offset: 2px;
+}
+
+.wiki-reader-toolbar button:disabled {
+  display: none;
+}
+
+.wiki-reader-toolbar button > span:first-child {
+  width: 14px;
+  color: currentColor;
+  font-size: 0.88rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.wiki-reader-toolbar > p {
+  margin: 0;
+  color: #8a94a5;
+  font: 500 0.65rem/1.35 var(--font-body);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.wiki-focus-toggle {
+  justify-self: end;
+}
+
+.wiki-sidebar,
+.wiki-toc {
+  top: 146px;
+  max-height: calc(100vh - 172px);
+  scrollbar-gutter: stable;
+}
+
+.wiki-sidebar {
+  padding-right: 8px;
+}
+
+.wiki-sidebar::-webkit-scrollbar,
+.wiki-toc::-webkit-scrollbar {
+  width: 6px;
+}
+
+.wiki-sidebar::-webkit-scrollbar-thumb,
+.wiki-toc::-webkit-scrollbar-thumb {
+  background: #d4dae4;
+  border-radius: 999px;
+}
+
+.wiki-search-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+
+.wiki-search-heading label {
+  margin: 0;
+}
+
+.wiki-search-heading button {
+  padding: 2px 0;
+  color: #7a8699;
+  background: transparent;
+  border: 0;
+  font: 600 0.64rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+body.wiki-search-collapsed .wiki-search-box {
+  display: none;
+}
+
+.wiki-main {
+  width: 100%;
+  max-width: 930px;
+  justify-self: center;
+}
+
+.wiki-home-view .wiki-main {
+  max-width: 1080px;
+}
+
+body.wiki-home-view .wiki-layout.container,
+body.wiki-toc-collapsed .wiki-layout.container {
+  grid-template-columns: 260px minmax(0, 1fr);
+}
+
+body.wiki-home-view .wiki-toc,
+body.wiki-toc-collapsed .wiki-toc,
+body.wiki-sidebar-collapsed .wiki-sidebar {
+  display: none;
+}
+
+body.wiki-sidebar-collapsed:not(.wiki-home-view):not(.wiki-toc-collapsed) .wiki-layout.container {
+  grid-template-columns: minmax(0, 1fr) 210px;
+}
+
+body.wiki-sidebar-collapsed.wiki-home-view .wiki-layout.container,
+body.wiki-sidebar-collapsed.wiki-toc-collapsed .wiki-layout.container,
+body.wiki-focus-mode .wiki-layout.container {
+  grid-template-columns: minmax(0, 1040px);
+  justify-content: center;
+}
+
+body.wiki-focus-mode .navbar {
+  transform: translateY(-110%);
+}
+
+body.wiki-focus-mode .book-masthead,
+body.wiki-focus-mode .wiki-sidebar,
+body.wiki-focus-mode .wiki-toc {
+  display: none;
+}
+
+body.wiki-focus-mode .wiki-reader-toolbar {
+  top: 8px;
+}
+
+body.wiki-focus-mode .wiki-main {
+  max-width: 900px;
+}
+
+.book-hero h1,
+.book-article-header h1,
+.book-search-results > h1,
+.book-intro-grid h2,
+.book-path-section h2,
+.book-section-heading h2,
+.book-section h2,
+.book-preflight h2,
+.book-chapter-card h3 {
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.book-chapter-nav summary strong,
+.book-chapter-nav li a {
+  text-wrap: pretty;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.book-chapter-nav summary {
+  grid-template-columns: 30px minmax(0, 1fr);
+  padding: 14px 5px;
+}
+
+.book-chapter-nav summary strong {
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.book-chapter-card {
+  min-height: 350px;
+  padding: clamp(24px, 2.5vw, 32px);
+}
+
+.book-chapter-card-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+}
+
+.book-chapter-card-top small {
+  max-width: 130px;
+  justify-self: end;
+  text-align: right;
+}
+
+.book-chapter-card h3 {
+  max-width: 440px;
+  font-size: clamp(1.7rem, 2.25vw, 2.2rem);
+  line-height: 1.08;
+}
+
+.book-chapter-card li a {
+  align-items: baseline;
+}
+
+.book-chapter-card li a > span {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1240px) and (min-width: 1051px) {
+  .wiki-layout.container {
+    max-width: 1160px;
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+
+  .wiki-toc,
+  .wiki-reader-toolbar #wikiTocToggle {
+    display: none;
+  }
+
+  body.wiki-sidebar-collapsed .wiki-layout.container {
+    grid-template-columns: minmax(0, 930px);
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1050px) {
+  .wiki-layout.container,
+  body.wiki-home-view .wiki-layout.container,
+  body.wiki-toc-collapsed .wiki-layout.container,
+  body.wiki-sidebar-collapsed .wiki-layout.container,
+  body.wiki-focus-mode .wiki-layout.container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 900px;
+    padding-top: 16px;
+  }
+
+  .wiki-reader-toolbar {
+    top: 72px;
+  }
+
+  .wiki-reader-toolbar #wikiTocToggle,
+  .wiki-reader-toolbar > p,
+  .wiki-toc {
+    display: none;
+  }
+
+  .wiki-reader-toolbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .wiki-sidebar,
+  body.wiki-sidebar-collapsed .wiki-sidebar {
+    position: fixed;
+    z-index: 1000;
+    top: 64px;
+    right: auto;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: min(88vw, 350px);
+    max-height: none;
+    padding: 24px 20px 50px;
+    overflow-y: auto;
+    background: #fff;
+    border: 0;
+    border-right: 1px solid #dfe4ec;
+    border-radius: 0;
+    box-shadow: 18px 0 40px rgba(30, 41, 59, 0.12);
+    transform: translateX(-105%);
+    transition: transform 180ms ease;
+  }
+
+  .wiki-sidebar.active {
+    transform: translateX(0);
+  }
+
+  .wiki-main,
+  .wiki-home-view .wiki-main,
+  body.wiki-focus-mode .wiki-main {
+    max-width: 850px;
+  }
+}
+
+@media (max-width: 680px) {
+  .wiki-reader-toolbar {
+    top: 68px;
+    margin-inline: -2px;
+  }
+
+  .wiki-reader-toolbar button {
+    padding-inline: 9px;
+  }
+
+  .wiki-reader-toolbar button > span:last-child {
+    display: none;
+  }
+
+  .wiki-reader-toolbar .wiki-focus-toggle > span:last-child {
+    display: inline;
+  }
+
+  .book-chapter-card-top {
+    display: flex;
+  }
+
+  .book-chapter-card h3 {
+    font-size: 1.8rem;
+  }
+}
+
+.page-tools-heading {
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px 0 10px;
+}
+
+.page-tools-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 38px;
+  padding: 0 13px;
+  color: #344054;
+  background: #fff;
+  border: 1px solid #d8dee8;
+  border-radius: 7px;
+  font: 600 0.68rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+.page-tools-toggle [data-tools-state] {
+  color: #2d5bd1;
+}
+
+.page-tools-toggle:hover {
+  border-color: #9eb2e6;
+}
+
+.collapsible-tools.is-collapsed {
+  display: none;
+}
+
+.quantum-header h1,
+.research-header h1,
+.paper-header h1,
+.journal-research-bridge h2,
+.research-page h2,
+.paper-page h2 {
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }

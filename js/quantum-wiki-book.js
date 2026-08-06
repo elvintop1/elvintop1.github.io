@@ -6,6 +6,13 @@
 
   const els = {};
   let flatArticles = [];
+  const preferenceKey = 'quantum-wiki-layout-v2';
+  let layoutPreferences = {
+    sidebarHidden: false,
+    searchHidden: true,
+    tocHidden: false,
+    focus: false
+  };
 
   const escapeHTML = (value = '') => String(value)
     .replace(/&/g, '&amp;')
@@ -90,6 +97,7 @@
   }
 
   function renderLanding() {
+    setViewMode('home');
     document.title = `${book.title} | Do Quang Hao`;
     els.breadcrumb.innerHTML = '<a href="#">Textbook</a><span aria-hidden="true">/</span><span>Contents</span>';
     els.content.innerHTML = `
@@ -158,10 +166,12 @@
         <p>${escapeHTML(book.edition)}</p>
         <a href="${flatArticles[0].route}">Start reading <span aria-hidden="true">→</span></a>
       </div>`;
+    setViewStatus(`${book.chapters.length} chapters · ${flatArticles.length} lessons`);
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   function renderSearchResults(query) {
+    setViewMode('search');
     const needle = query.trim().toLowerCase();
     const results = flatArticles.filter((item) => item.searchText.includes(needle));
     document.title = `Search: ${query} | ${book.title}`;
@@ -182,10 +192,12 @@
         </div>
       </section>`;
     els.toc.innerHTML = '<p class="toc-empty-msg">Choose a result to open its full lesson.</p>';
+    setViewStatus(`${results.length} search result${results.length === 1 ? '' : 's'}`);
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   function renderArticle(item) {
+    setViewMode('article');
     const currentIndex = flatArticles.findIndex((candidate) => candidate.route === item.route);
     const previous = flatArticles[currentIndex - 1];
     const next = flatArticles[currentIndex + 1];
@@ -310,7 +322,8 @@
     renderMath();
     renderTOC();
     bindCopyButtons();
-    if (window.innerWidth < 980) els.sidebar.classList.remove('active');
+    setViewStatus(`Chapter ${String(chapter.number).padStart(2, '0')} · Lesson ${item.index + 1} of ${chapter.articles.length}`);
+    if (window.innerWidth <= 1050) els.sidebar.classList.remove('active');
     window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
@@ -364,6 +377,95 @@
     });
   }
 
+  function readLayoutPreferences() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(preferenceKey));
+      if (saved && typeof saved === 'object') layoutPreferences = { ...layoutPreferences, ...saved, focus: false };
+    } catch (error) {
+      // Local preferences are optional; the default reading layout remains usable.
+    }
+  }
+
+  function saveLayoutPreferences() {
+    try {
+      localStorage.setItem(preferenceKey, JSON.stringify({
+        sidebarHidden: layoutPreferences.sidebarHidden,
+        searchHidden: layoutPreferences.searchHidden,
+        tocHidden: layoutPreferences.tocHidden
+      }));
+    } catch (error) {
+      // Ignore storage restrictions in private browsing contexts.
+    }
+  }
+
+  function isCompactLayout() {
+    return window.matchMedia('(max-width: 1050px)').matches;
+  }
+
+  function setViewMode(mode) {
+    document.body.classList.toggle('wiki-home-view', mode === 'home');
+    document.body.classList.toggle('wiki-search-view', mode === 'search');
+    document.body.classList.toggle('wiki-article-view', mode === 'article');
+    if (els.tocToggle) els.tocToggle.disabled = mode !== 'article';
+    applyLayoutPreferences();
+  }
+
+  function setViewStatus(message) {
+    if (els.viewStatus) els.viewStatus.textContent = message;
+  }
+
+  function applyLayoutPreferences() {
+    document.body.classList.toggle('wiki-sidebar-collapsed', layoutPreferences.sidebarHidden && !isCompactLayout());
+    document.body.classList.toggle('wiki-search-collapsed', layoutPreferences.searchHidden);
+    document.body.classList.toggle('wiki-toc-collapsed', layoutPreferences.tocHidden);
+    document.body.classList.toggle('wiki-focus-mode', layoutPreferences.focus);
+
+    if (els.sidebarToggle) {
+      const sidebarVisible = isCompactLayout() ? els.sidebar.classList.contains('active') : !layoutPreferences.sidebarHidden;
+      els.sidebarToggle.setAttribute('aria-expanded', String(sidebarVisible));
+      els.sidebarToggle.classList.toggle('is-active', sidebarVisible);
+    }
+    if (els.searchToggle) {
+      els.searchToggle.setAttribute('aria-expanded', String(!layoutPreferences.searchHidden));
+      els.searchToggle.classList.toggle('is-active', !layoutPreferences.searchHidden);
+    }
+    if (els.tocToggle) {
+      const tocVisible = !layoutPreferences.tocHidden && document.body.classList.contains('wiki-article-view');
+      els.tocToggle.setAttribute('aria-expanded', String(tocVisible));
+      els.tocToggle.classList.toggle('is-active', tocVisible);
+    }
+    if (els.focusToggle) {
+      els.focusToggle.setAttribute('aria-pressed', String(layoutPreferences.focus));
+      els.focusToggle.classList.toggle('is-active', layoutPreferences.focus);
+      els.focusToggle.querySelector('span:last-child').textContent = layoutPreferences.focus ? 'Exit focus' : 'Focus';
+    }
+  }
+
+  function toggleSidebar() {
+    if (isCompactLayout()) {
+      els.sidebar.classList.toggle('active');
+    } else {
+      layoutPreferences.sidebarHidden = !layoutPreferences.sidebarHidden;
+      saveLayoutPreferences();
+    }
+    applyLayoutPreferences();
+  }
+
+  function showSearch() {
+    layoutPreferences.searchHidden = false;
+    if (!isCompactLayout()) layoutPreferences.sidebarHidden = false;
+    else els.sidebar.classList.add('active');
+    saveLayoutPreferences();
+    applyLayoutPreferences();
+    window.requestAnimationFrame(() => els.search.focus());
+  }
+
+  function hideSearch() {
+    layoutPreferences.searchHidden = true;
+    saveLayoutPreferences();
+    applyLayoutPreferences();
+  }
+
   function handleRoute() {
     const route = window.location.hash;
     if (!route || route === '#') {
@@ -387,11 +489,19 @@
     els.breadcrumb = document.getElementById('wikiBreadcrumb');
     els.content = document.getElementById('wikiTopicContent');
     els.toc = document.getElementById('tocNav');
+    els.sidebarToggle = document.getElementById('wikiSidebarToggle');
+    els.searchToggle = document.getElementById('wikiSearchToggle');
+    els.searchClose = document.getElementById('wikiSearchClose');
+    els.tocToggle = document.getElementById('wikiTocToggle');
+    els.focusToggle = document.getElementById('wikiFocusToggle');
+    els.viewStatus = document.getElementById('wikiViewStatus');
     if (!els.sidebar || !els.topics || !els.search || !els.breadcrumb || !els.content || !els.toc) return;
 
+    readLayoutPreferences();
     buildIndex();
     renderSidebar();
     handleRoute();
+    applyLayoutPreferences();
 
     window.addEventListener('hashchange', () => {
       els.search.value = '';
@@ -401,11 +511,35 @@
       const query = els.search.value.trim();
       renderSidebar(query);
       if (query.length >= 2) renderSearchResults(query);
-      else handleRoute();
+      else if (query.length === 0) handleRoute();
     });
 
-    const toggle = document.getElementById('wikiSidebarToggle');
-    toggle?.addEventListener('click', () => els.sidebar.classList.toggle('active'));
+    els.sidebarToggle?.addEventListener('click', toggleSidebar);
+    els.searchToggle?.addEventListener('click', () => {
+      if (layoutPreferences.searchHidden) showSearch();
+      else hideSearch();
+    });
+    els.searchClose?.addEventListener('click', hideSearch);
+    els.tocToggle?.addEventListener('click', () => {
+      layoutPreferences.tocHidden = !layoutPreferences.tocHidden;
+      saveLayoutPreferences();
+      applyLayoutPreferences();
+    });
+    els.focusToggle?.addEventListener('click', () => {
+      layoutPreferences.focus = !layoutPreferences.focus;
+      applyLayoutPreferences();
+    });
+    window.addEventListener('resize', applyLayoutPreferences);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && els.sidebar.classList.contains('active')) {
+        els.sidebar.classList.remove('active');
+        applyLayoutPreferences();
+      }
+      if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName || '')) {
+        event.preventDefault();
+        showSearch();
+      }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', init);

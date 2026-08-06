@@ -63,7 +63,12 @@
         </section>
         
         <!-- Filter Bar -->
-        <section class="journal-filter" aria-label="Filter journal entries">
+        <div class="page-tools-heading">
+            <button class="page-tools-toggle" type="button" data-tools-toggle="journalFilter" aria-controls="journalFilter" aria-expanded="true">
+                <span>Search &amp; filters</span><span data-tools-state>Hide</span>
+            </button>
+        </div>
+        <section class="journal-filter collapsible-tools" id="journalFilter" aria-label="Filter journal entries">
             <div class="search-box">
                 <input type="search" id="blogSearch" placeholder="Search entries..." aria-label="Search journal entries">
             </div>

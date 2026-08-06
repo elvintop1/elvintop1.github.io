@@ -57,7 +57,10 @@
         <div class="section-header">
           <div><p class="content-kicker">Daily record</p><h2 id="research-notes-heading">Notes by date</h2></div>
         </div>
-        <div class="research-toolbar">
+        <div class="page-tools-heading">
+          <button class="page-tools-toggle" type="button" data-tools-toggle="researchToolbar" aria-controls="researchToolbar" aria-expanded="true"><span>Search &amp; filters</span><span data-tools-state>Hide</span></button>
+        </div>
+        <div class="research-toolbar collapsible-tools" id="researchToolbar">
           <label class="research-search"><span class="sr-only">Search research notes</span><input type="search" id="researchSearch" placeholder="Search questions, findings, and tags..."></label>
           <label><span class="sr-only">Filter by research direction</span><select id="researchTrackFilter"><option value="all">All directions</option></select></label>
           <label><span class="sr-only">Sort notes</span><select id="researchSort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></label>
