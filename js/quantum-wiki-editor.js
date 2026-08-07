@@ -100,8 +100,12 @@
     const token = fragment.get('admin_session');
     if (!token) return '';
     try { sessionStorage.setItem(sessionStorageKey, token); } catch (error) { /* The in-memory session still works when browser storage is unavailable. */ }
-    history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
     return token;
+  }
+
+  function clearSessionFragment() {
+    if (!window.location.hash.includes('admin_session=')) return;
+    try { history.replaceState(null, '', `${window.location.pathname}${window.location.search}`); } catch (error) { /* The session still remains valid if the browser cannot clean the URL. */ }
   }
 
   function storedSession() {
@@ -120,6 +124,7 @@
     try {
       const session = await adminRequest('/api/session');
       currentUser = session.user;
+      clearSessionFragment();
       els.identity.textContent = `Signed in as ${session.user.login}`;
       await Promise.all([loadManagedDocuments(), loadManagedResearchDocuments(), loadManagedPaperDocuments()]);
       rebuildArticleIndex();
