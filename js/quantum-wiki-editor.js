@@ -733,6 +733,7 @@
     resetPaperForm();
     rebuildResearchIndex();
     rebuildPaperIndex();
+    sessionToken = readSessionFromFragment() || storedSession();
     setEditorMode(new URLSearchParams(window.location.search).get('type') || 'wiki');
 
     els.authForm.addEventListener('submit', connect);
@@ -766,7 +767,6 @@
     els.paperForm.querySelectorAll('input, textarea, select').forEach((field) => field.addEventListener('input', renderPaperPreview));
     els.paperForm.addEventListener('submit', publishPaper);
 
-    sessionToken = readSessionFromFragment() || storedSession();
     if (sessionToken) openWorkspace();
   }
 
