@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Content Studio | Do Quang Hao</title>
+  <title>Quantum Admin Studio | Do Quang Hao</title>
   <meta name="description" content="Authorized editor for quantum Wiki lessons, research notes, and paper analyses.">
   <meta name="robots" content="noindex,nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src https://api.github.com; img-src 'self' data:; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src https://quantum-content-admin.quantum-content-admin-api.workers.dev; img-src 'self' data: https://avatars.githubusercontent.com; base-uri 'self'; form-action 'self'">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -34,22 +34,24 @@
 
   <main class="wiki-editor-page">
     <header class="wiki-editor-hero container">
-      <p class="content-kicker">Authorized publishing workspace</p>
-      <h1>Quantum Content Studio</h1>
+      <p class="content-kicker">Private publishing workspace</p>
+      <h1>Quantum Admin Studio</h1>
       <p>Create or revise Wiki lessons, research notes, and paper analyses through structured forms. Published content is versioned in GitHub and appears after GitHub Pages finishes updating.</p>
     </header>
 
     <section class="wiki-editor-auth container" id="editorAuth" aria-labelledby="editorAuthTitle">
       <div>
-        <p class="content-kicker">Step 1 · Connect</p>
-        <h2 id="editorAuthTitle">Verify your publishing permission</h2>
-        <p>Repository owners should use a fine-grained GitHub token restricted to <strong>elvintop1/elvintop1.github.io</strong> with Contents set to Read and write. Collaborators can use any GitHub token that grants their account write access to this repository. The editor verifies push permission before opening.</p>
-        <a class="wiki-token-link" href="https://github.com/settings/personal-access-tokens/new?name=Quantum%20Content%20Studio&amp;description=Publish%20Quantum%20Wiki%2C%20Research%2C%20and%20Paper%20content&amp;target_name=elvintop1&amp;contents=write" target="_blank" rel="noopener noreferrer">Create a restricted token on GitHub <span aria-hidden="true">↗</span></a>
+        <p class="content-kicker">Admin access</p>
+        <h2 id="editorAuthTitle">Sign in to edit the website</h2>
+        <p>Use your GitHub account to open the private editor for Wiki lessons, Research notes, and Paper analyses. Access is limited to approved administrators and this website repository.</p>
+        <p class="wiki-admin-scope"><span aria-hidden="true">✓</span> No access token needs to be copied into this page.</p>
       </div>
       <form id="editorAuthForm" class="wiki-auth-form">
-        <label for="githubToken">GitHub access token</label>
-        <div><input type="password" id="githubToken" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required><button type="submit" id="editorConnect">Connect</button></div>
-        <small class="wiki-token-security">Kept in memory only, cleared on disconnect or tab close, and never written to website storage.</small>
+        <div class="wiki-auth-mark" aria-hidden="true">GH</div>
+        <h3>Administrator sign in</h3>
+        <p>GitHub verifies your identity. The server checks both the admin allowlist and repository write permission.</p>
+        <button type="submit" id="editorConnect"><span aria-hidden="true">↗</span> Sign in with GitHub</button>
+        <small class="wiki-token-security">The admin session expires automatically and can be ended at any time.</small>
         <p id="editorAuthStatus" class="wiki-editor-status" role="status"></p>
       </form>
     </section>
@@ -249,12 +251,12 @@
   <template id="exerciseRowTemplate"><article class="wiki-repeat-row" data-row-type="exercise"><div class="wiki-repeat-heading"><strong>Exercise</strong><button type="button" data-remove-row>Remove</button></div><label>Prompt<textarea data-field="prompt" rows="3" required></textarea></label><label>Hint<textarea data-field="hint" rows="2" required></textarea></label><label>Solution<textarea data-field="answer" rows="3" required></textarea></label></article></template>
   <template id="sourceRowTemplate"><article class="wiki-repeat-row" data-row-type="source"><div class="wiki-repeat-heading"><strong>Academic source</strong><button type="button" data-remove-row>Remove</button></div><label>Title<input data-field="title" type="text"></label><label>URL<input data-field="url" type="url" placeholder="https://…"></label><label>Why this source is useful<textarea data-field="note" rows="3"></textarea></label></article></template>
 
-  <footer class="site-footer"><div class="container footer-content"><p>&copy; 2026 Do Quang Hao. Authorized quantum publishing workspace.</p><div class="footer-links"><a href="wiki.html">Quantum Wiki</a><a href="research.html">Research</a><a href="papers.html">Papers</a><a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></footer>
+  <footer class="site-footer"><div class="container footer-content"><p>&copy; 2026 Do Quang Hao. Private quantum publishing workspace.</p><div class="footer-links"><a href="wiki.html">Quantum Wiki</a><a href="research.html">Research</a><a href="papers.html">Papers</a><a href="https://github.com/elvintop1" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></footer>
   <script src="../js/main.js"></script>
-  <script src="../js/quantum-wiki-book-data.js?v=20260806-6"></script>
-  <script src="../js/quantum-research-data.js?v=20260806-6"></script>
-  <script src="../js/quantum-papers-data.js?v=20260806-6"></script>
-  <script src="../js/quantum-wiki-editor.js?v=20260806-6"></script>
+  <script src="../js/quantum-wiki-book-data.js?v=20260807-1"></script>
+  <script src="../js/quantum-research-data.js?v=20260807-1"></script>
+  <script src="../js/quantum-papers-data.js?v=20260807-1"></script>
+  <script src="../js/quantum-wiki-editor.js?v=20260807-1"></script>
   <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
 </body>
 </html>

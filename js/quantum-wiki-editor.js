@@ -2,19 +2,18 @@
   'use strict';
 
   const repository = {
-    owner: 'elvintop1',
-    name: 'elvintop1.github.io',
-    branch: 'main',
     manifestPath: 'content/wiki/manifest.json',
     researchManifestPath: 'content/research/manifest.json',
     paperManifestPath: 'content/papers/manifest.json'
   };
+  const adminApiBase = 'https://quantum-content-admin.quantum-content-admin-api.workers.dev';
+  const sessionStorageKey = 'quantum-admin-session';
 
   const els = {};
   const managedDocuments = new Map();
   const managedResearchDocuments = new Map();
   const managedPaperDocuments = new Map();
-  let accessToken = '';
+  let sessionToken = '';
   let currentUser = null;
   let articleIndex = [];
   let slugWasEdited = false;
@@ -63,77 +62,61 @@
     return sections.map((section) => `## ${String(section.title || '').replace(/^\d+\.\s*/, '')}\n${(section.paragraphs || []).join('\n\n')}`).join('\n\n');
   }
   const routeKey = (chapterSlug, articleSlug) => `${chapterSlug}/${articleSlug}`;
-  const repositoryApi = `https://api.github.com/repos/${repository.owner}/${repository.name}`;
-  const apiPath = (path = '') => path ? `${repositoryApi}/${path}` : repositoryApi;
-
-  function githubHeaders() {
-    return {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${accessToken}`,
-      'X-GitHub-Api-Version': '2026-03-10'
-    };
-  }
-
-  async function githubRequest(url, options = {}) {
-    const response = await fetch(url, { ...options, headers: { ...githubHeaders(), ...(options.headers || {}) } });
+  async function adminRequest(path, options = {}) {
+    const headers = { ...(options.headers || {}) };
+    if (sessionToken) headers.Authorization = `Bearer ${sessionToken}`;
+    if (options.body) headers['Content-Type'] = 'application/json';
+    const response = await fetch(`${adminApiBase}${path}`, { ...options, headers });
     let payload = null;
     try { payload = await response.json(); } catch (error) { payload = null; }
     if (!response.ok) {
-      const apiError = new Error(payload?.message || `GitHub request failed (${response.status})`);
+      const apiError = new Error(payload?.error || `Admin request failed (${response.status})`);
       apiError.status = response.status;
       throw apiError;
     }
     return payload;
   }
 
-  function encodeContent(value) {
-    const bytes = new TextEncoder().encode(value);
-    let binary = '';
-    bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
-    return btoa(binary);
-  }
-
-  function decodeContent(value) {
-    const binary = atob(String(value).replace(/\s/g, ''));
-    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
-    return new TextDecoder().decode(bytes);
-  }
-
   async function getRepositoryFile(path) {
-    try {
-      const payload = await githubRequest(`${apiPath(`contents/${path}`)}?ref=${encodeURIComponent(repository.branch)}`);
-      return { sha: payload.sha, value: JSON.parse(decodeContent(payload.content)) };
-    } catch (error) {
-      if (error.status === 404) return null;
-      throw error;
-    }
+    const payload = await adminRequest(`/api/repository-file?path=${encodeURIComponent(path)}`);
+    return payload.exists ? { sha: payload.sha, value: payload.value } : null;
   }
 
   async function putRepositoryFile(path, value, message, sha = null) {
-    const body = {
-      message,
-      content: encodeContent(`${JSON.stringify(value, null, 2)}\n`),
-      branch: repository.branch
-    };
+    const body = { value, message };
     if (sha) body.sha = sha;
-    return githubRequest(apiPath(`contents/${path}`), { method: 'PUT', body: JSON.stringify(body) });
+    return adminRequest(`/api/repository-file?path=${encodeURIComponent(path)}`, { method: 'PUT', body: JSON.stringify(body) });
   }
 
   async function connect(event) {
     event.preventDefault();
-    accessToken = els.token.value.trim();
-    if (!accessToken) return;
-    setStatus(els.authStatus, 'Checking GitHub identity and repository permission…', 'working');
+    setStatus(els.authStatus, 'Opening secure GitHub sign in…', 'working');
+    els.connect.disabled = true;
+    window.location.assign(`${adminApiBase}/auth/login`);
+  }
+
+  function readSessionFromFragment() {
+    const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const token = fragment.get('admin_session');
+    if (!token) return '';
+    history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+    sessionStorage.setItem(sessionStorageKey, token);
+    return token;
+  }
+
+  function clearSession() {
+    sessionStorage.removeItem(sessionStorageKey);
+    sessionToken = '';
+    currentUser = null;
+  }
+
+  async function openWorkspace() {
+    setStatus(els.authStatus, 'Checking administrator access…', 'working');
     els.connect.disabled = true;
     try {
-      const [user, repo] = await Promise.all([
-        githubRequest('https://api.github.com/user'),
-        githubRequest(apiPath(''))
-      ]);
-      if (!repo.permissions?.push) throw new Error('This GitHub account does not have write permission for the website repository.');
-      currentUser = user;
-      els.token.value = '';
-      els.identity.textContent = `Connected as ${user.login}`;
+      const session = await adminRequest('/api/session');
+      currentUser = session.user;
+      els.identity.textContent = `Signed in as ${session.user.login}`;
       await Promise.all([loadManagedDocuments(), loadManagedResearchDocuments(), loadManagedPaperDocuments()]);
       rebuildArticleIndex();
       rebuildResearchIndex();
@@ -143,23 +126,23 @@
       setStatus(els.authStatus, '', '');
       window.scrollTo({ top: els.workspace.offsetTop - 90, behavior: 'smooth' });
     } catch (error) {
-      accessToken = '';
+      clearSession();
       setStatus(els.authStatus, error.message, 'error');
     } finally {
       els.connect.disabled = false;
     }
   }
 
-  function disconnect() {
-    accessToken = '';
-    currentUser = null;
+  async function disconnect() {
+    try { await adminRequest('/api/logout', { method: 'POST' }); } catch (error) { /* The local session is cleared even if the network is unavailable. */ }
+    clearSession();
     managedDocuments.clear();
     managedResearchDocuments.clear();
     managedPaperDocuments.clear();
     els.workspace.classList.add('hidden');
     els.auth.classList.remove('hidden');
-    els.identity.textContent = 'Not connected';
-    setStatus(els.authStatus, 'Disconnected. The token was removed from this tab.', 'success');
+    els.identity.textContent = 'Signed out';
+    setStatus(els.authStatus, 'Signed out securely.', 'success');
     window.scrollTo({ top: els.auth.offsetTop - 90, behavior: 'smooth' });
   }
 
@@ -441,7 +424,7 @@
 
   async function publish(event) {
     event.preventDefault();
-    if (!accessToken || !currentUser) return setStatus(els.publishStatus, 'Connect an authorized GitHub account first.', 'error');
+    if (!sessionToken || !currentUser) return setStatus(els.publishStatus, 'Sign in as an administrator first.', 'error');
     const documentData = buildDocument();
     const validationError = validateDocument(documentData);
     if (validationError) return setStatus(els.publishStatus, validationError, 'error');
@@ -606,7 +589,7 @@
 
   async function publishResearch(event) {
     event.preventDefault();
-    if (!accessToken || !currentUser) return setStatus(els.researchPublishStatus, 'Connect an authorized GitHub account first.', 'error');
+    if (!sessionToken || !currentUser) return setStatus(els.researchPublishStatus, 'Sign in as an administrator first.', 'error');
     const note = buildResearchDocument();
     const validationError = validateResearch(note);
     if (validationError) return setStatus(els.researchPublishStatus, validationError, 'error');
@@ -687,7 +670,7 @@
 
   async function publishPaper(event) {
     event.preventDefault();
-    if (!accessToken || !currentUser) return setStatus(els.paperPublishStatus, 'Connect an authorized GitHub account first.', 'error');
+    if (!sessionToken || !currentUser) return setStatus(els.paperPublishStatus, 'Sign in as an administrator first.', 'error');
     const paper = buildPaperDocument();
     const validationError = validatePaper(paper);
     if (validationError) return setStatus(els.paperPublishStatus, validationError, 'error');
@@ -721,7 +704,7 @@
 
   function cacheElements() {
     const map = {
-      auth: 'editorAuth', authForm: 'editorAuthForm', token: 'githubToken', connect: 'editorConnect', authStatus: 'editorAuthStatus', workspace: 'editorWorkspace', identity: 'editorIdentity', disconnect: 'editorDisconnect', existing: 'existingArticle', form: 'wikiArticleForm', chapter: 'articleChapter', slug: 'articleSlug', newChapter: 'newChapterFields', chapterNumber: 'chapterNumber', chapterAccent: 'chapterAccent', chapterTitle: 'chapterTitle', chapterSummary: 'chapterSummary', title: 'articleTitle', summary: 'articleSummary', level: 'articleLevel', minutes: 'articleMinutes', prerequisites: 'articlePrerequisites', outcomes: 'articleOutcomes', workedTitle: 'workedTitle', workedProblem: 'workedProblem', workedSteps: 'workedSteps', workedResult: 'workedResult', labTitle: 'labTitle', labCode: 'labCode', connections: 'articleConnections', confirm: 'publishConfirm', publish: 'publishArticle', publishStatus: 'publishStatus', preview: 'articlePreview'
+      auth: 'editorAuth', authForm: 'editorAuthForm', connect: 'editorConnect', authStatus: 'editorAuthStatus', workspace: 'editorWorkspace', identity: 'editorIdentity', disconnect: 'editorDisconnect', existing: 'existingArticle', form: 'wikiArticleForm', chapter: 'articleChapter', slug: 'articleSlug', newChapter: 'newChapterFields', chapterNumber: 'chapterNumber', chapterAccent: 'chapterAccent', chapterTitle: 'chapterTitle', chapterSummary: 'chapterSummary', title: 'articleTitle', summary: 'articleSummary', level: 'articleLevel', minutes: 'articleMinutes', prerequisites: 'articlePrerequisites', outcomes: 'articleOutcomes', workedTitle: 'workedTitle', workedProblem: 'workedProblem', workedSteps: 'workedSteps', workedResult: 'workedResult', labTitle: 'labTitle', labCode: 'labCode', connections: 'articleConnections', confirm: 'publishConfirm', publish: 'publishArticle', publishStatus: 'publishStatus', preview: 'articlePreview'
     };
     Object.entries(map).forEach(([key, id]) => { els[key] = document.getElementById(id); });
     const extended = {
@@ -773,6 +756,9 @@
     els.paperSlug.addEventListener('input', () => { els.paperSlug.value = slugify(els.paperSlug.value); });
     els.paperForm.querySelectorAll('input, textarea, select').forEach((field) => field.addEventListener('input', renderPaperPreview));
     els.paperForm.addEventListener('submit', publishPaper);
+
+    sessionToken = readSessionFromFragment() || sessionStorage.getItem(sessionStorageKey) || '';
+    if (sessionToken) openWorkspace();
   }
 
   document.addEventListener('DOMContentLoaded', init);

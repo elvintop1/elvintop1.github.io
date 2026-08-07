@@ -1,0 +1,3 @@
+.admin-setup-token
+admin-worker/.wrangler/
+admin-worker/node_modules/

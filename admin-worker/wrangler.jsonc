@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "quantum-content-admin",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-01",
+  "observability": { "enabled": true },
+  "vars": {
+    "GITHUB_OWNER": "elvintop1",
+    "GITHUB_REPO": "elvintop1.github.io",
+    "GITHUB_BRANCH": "main",
+    "ALLOWED_GITHUB_LOGINS": "elvintop1",
+    "EDITOR_ORIGIN": "https://elvintop1.github.io",
+    "EDITOR_URL": "https://elvintop1.github.io/quantum/editor.html"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "quantum-content-admin",
+      "database_id": "07fef73f-b2b7-4ca8-b31a-df5a13b9919b"
+    }
+  ]
+}
