@@ -8,6 +8,7 @@
   };
   const adminApiBase = 'https://quantum-content-admin.quantum-content-admin-api.workers.dev';
   const sessionStorageKey = 'quantum-admin-session';
+  const callbackSessionToken = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('admin_session') || '';
 
   const els = {};
   const managedDocuments = new Map();
@@ -96,8 +97,7 @@
   }
 
   function readSessionFromFragment() {
-    const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-    const token = fragment.get('admin_session');
+    const token = callbackSessionToken;
     if (!token) return '';
     try { sessionStorage.setItem(sessionStorageKey, token); } catch (error) { /* The in-memory session still works when browser storage is unavailable. */ }
     return token;
