@@ -99,13 +99,17 @@
     const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''));
     const token = fragment.get('admin_session');
     if (!token) return '';
+    try { sessionStorage.setItem(sessionStorageKey, token); } catch (error) { /* The in-memory session still works when browser storage is unavailable. */ }
     history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
-    sessionStorage.setItem(sessionStorageKey, token);
     return token;
   }
 
+  function storedSession() {
+    try { return sessionStorage.getItem(sessionStorageKey) || ''; } catch (error) { return ''; }
+  }
+
   function clearSession() {
-    sessionStorage.removeItem(sessionStorageKey);
+    try { sessionStorage.removeItem(sessionStorageKey); } catch (error) { /* Nothing else is required to end the in-memory session. */ }
     sessionToken = '';
     currentUser = null;
   }
@@ -757,7 +761,7 @@
     els.paperForm.querySelectorAll('input, textarea, select').forEach((field) => field.addEventListener('input', renderPaperPreview));
     els.paperForm.addEventListener('submit', publishPaper);
 
-    sessionToken = readSessionFromFragment() || sessionStorage.getItem(sessionStorageKey) || '';
+    sessionToken = readSessionFromFragment() || storedSession();
     if (sessionToken) openWorkspace();
   }
 
